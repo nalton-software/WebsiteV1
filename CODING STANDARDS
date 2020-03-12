@@ -1,0 +1,7 @@
+no spaces except on comments and front end stuff
+2 spaces indent
+camelCase for css types, id's var names, functions
+capital letter at start of classes
+use double quotes for html/css "
+use single quotes for js '
+The shade of green that we use is: #27B133 / rgb(39, 177, 51) / hsv(125, 78, 69) / hsl(125, 64, 42)
