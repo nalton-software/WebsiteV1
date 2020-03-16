@@ -4,17 +4,27 @@ const sidebarHolder = document.getElementById('sidebarHolder');
 const sidebar = document.getElementById('sidebar');
 const mainCell = document.getElementById('mainCell');
 
-let sidebarVisible = false;
+let sidebarVisible = true;
 
 function toggleSidebar() {
   resizeSidebar();
-  if (sidebarVisible) {
+  if (sidebarVisible) { // hide
     table.style.transform = `translateX(-${sidebarHolder.offsetWidth}px)`; // smooth movement
     sidebarVisible = false;
+
+    var viewportWidth = document.body.clientWidth;
+    table.style.width = viewportWidth + sidebar.clientWidth + 'px';
+    mainCell.style.maxWidth = viewportWidth + 'px';
+    mainCell.style.width = viewportWidth + 'px';
   }
-  else {
+  else { // show
     table.style.transform = 'translateX(0px)';
     sidebarVisible = true;
+
+    var viewportWidth = document.body.clientWidth;
+    table.style.width = viewportWidth + 'px';
+    mainCell.style.maxWidth = viewportWidth - sidebar.clientWidth + 'px';
+    mainCell.style.width = viewportWidth - sidebar.clientWidth + 'px';
   }
 }
 
@@ -58,7 +68,7 @@ async function makeLinks() { // fetch data from file, split up, turn into links
 async function resizeSidebar() {
   var viewportHeight = document.body.clientHeight;
   var topbarHeight = topbar.clientHeight;
-  var sidebarHeight = viewportHeight - topbarHeight - 20; // for padding and other weird small things
+  var sidebarHeight = viewportHeight - topbarHeight - 30; // for padding and other weird small things
   if (mainCell.clientHeight >= sidebarHeight) {
     sidebarHeight = mainCell.clientHeight;
   }

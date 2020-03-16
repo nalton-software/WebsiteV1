@@ -15,4 +15,4 @@ I am making python program to make it go infinitely!!!!
 
 #### v 1.0.2 - 16 Mar 2020
 Moved into repo using repl  
-THIS IS A TEST  
+Mostly fixed layout - text now scales to width (sadly not with smooth transition)

@@ -2,7 +2,6 @@ Homepage&/homepage*
 Example Project&/exampleProject*
 Sandy Editor&/sandyEditor*
 Minesweeper&/minesweeper*
-Server Test&/serverTest*
 Homepage&/homepage*
 Example Project&/exampleProject*
 Sandy Editor&/sandyEditor*
