@@ -3,6 +3,7 @@ const topbar = document.getElementById('topbar');
 const sidebarHolder = document.getElementById('sidebarHolder');
 const sidebar = document.getElementById('sidebar');
 const mainCell = document.getElementById('mainCell');
+const sidebarButton = document.getElementById('sidebarButton');
 
 let sidebarVisible = true;
 
@@ -16,6 +17,7 @@ function toggleSidebar() {
     table.style.width = viewportWidth + sidebar.clientWidth + 'px';
     mainCell.style.maxWidth = viewportWidth + 'px';
     mainCell.style.width = viewportWidth + 'px';
+    sidebarButton.innerHTML = 'Show all pages';
   }
   else { // show
     table.style.transform = 'translateX(0px)';
@@ -25,6 +27,7 @@ function toggleSidebar() {
     table.style.width = viewportWidth + 'px';
     mainCell.style.maxWidth = viewportWidth - sidebar.clientWidth + 'px';
     mainCell.style.width = viewportWidth - sidebar.clientWidth + 'px';
+    sidebarButton.innerHTML = 'Hide all pages';
   }
 }
 
