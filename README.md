@@ -17,3 +17,5 @@ I am making python program to make it go infinitely!!!!
 Moved into repo using repl  
 Mostly fixed layout - text now scales to width (sadly not with smooth transition)  
 Added changing text to button
+
+#### hello! 37-3-20
