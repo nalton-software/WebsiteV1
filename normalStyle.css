@@ -35,8 +35,7 @@ h1 {
 
 .topbar {
   padding: 10px;
-  width: 100%;
-  display: inline-block;
+  display: block;
   background-color: #27B133;
 }
 
@@ -68,6 +67,7 @@ h1 {
   padding: 10px;
 
   background-color: #27B133;
+  /* repl doesn't like this, but it works*/
   scrollbar-color: #DDDDDD green;
   overflow-y: scroll;
   
@@ -82,7 +82,8 @@ h1 {
 .main {
   vertical-align: top;
   margin-top: 30px;
+  margin-right: 0px;
   padding: 0px 10px;
   word-wrap: break-word;
-  word-break: break-all;
+  word-break: break-word;
 }
