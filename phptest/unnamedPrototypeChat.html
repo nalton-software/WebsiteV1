@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Unnamed Prototype Chat</title>
+    <link rel="stylesheet" type="text/css" href="StylesV1.css">
+    <link rel="icon" href="favicon.png">
+    <script src="anchorMaker.js" defer></script>
+
+    <style>
+    #resultBox {
+        overflow-y: scroll;
+        height: 60vh;
+        width: 60vw;
+        border: 1px solid black;
+        padding: 10px;
+    }
+
+    #inputTable {
+        margin: 5px 40px;
+        vertical-align: top;
+        padding: 10px;
+    }
+
+    #inputTableLeft {
+        width: 400px;
+    }
+
+    #inputField {
+        width: 250px;
+    }
+    </style>
+</head>
+
+<body style="background-color: white">
+<table style="width: 100%">
+<tr>
+    <td style="width: 220px">
+        <img src="ATPR_LOGO.jpg" style="height: 70px" alt="ANTON PROGRAMMING">
+    </td>
+
+    <td>
+    <!--Title-->
+
+    <p class="greenh">Unnamed Prototype Chat</p>
+
+    </td>
+</tr>
+<tr>
+    <td id="links" style="background-color: #3b9e29; vertical-align: top; height: 800px">
+    <br>
+    </td>
+
+    <td style="vertical-align: top">
+    <div style="margin: 0px 10px">
+    <!--MAIN STUFF-->
+    <div id="resultBox" style="overflow-y:scroll; height:50vh;"></div>
+
+    <table id="inputTable">
+        <tr>
+            <td id="inputTableLeft">
+                <input id="inputField">
+                <button onclick="submit()">Write!</button>
+            </td>
+        
+            <td>
+                <p style="margin-left: 10px">Username: <input id="nameField"></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <button onclick="userClearChat()">Clear chat</button>
+            </td>
+        </tr>
+        </table>
+    </div>
+    </td>
+</tr>
+</table>
+</body>
+
+<script>
+const messageSep = '|';
+const setupMessage = '{"username":"UPC-SETUP","content":"Welcome to Unnamed Protoype chat"}';
+const inputField = document.getElementById('inputField');
+const nameField = document.getElementById('nameField');
+const resultBox = document.getElementById('resultBox');
+
+var lastInfoDownload = '';
+var isFirstUpdate = true;
+
+var Message = function(username, content) {
+    this.username = username;
+    this.content = content;
+};
+
+Message.prototype.stringify = function() {
+    return JSON.stringify(this);
+};
+
+function submit() {
+    var content = inputField.value;
+    
+    var username = nameField.value
+    if (username.length < 1) {
+        username = 'anonymous';
+    }
+
+    var message = new Message(username, content);
+    sendToServer(messageSep + message.stringify(), 'upctxt.txt');
+    inputField.value = '';
+    stickScroll();
+}
+
+function sendToServer(data, file) {// file is file to write into, not the php file
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            response = xmlhttp.responseText;
+            //console.log(response);
+        }
+    }
+    xmlhttp.open("GET", "editTxt.php?txtFile=" + file + "&data=" + data);
+    xmlhttp.send();
+}
+
+function stickScroll() {
+    resultBox.scrollTop = resultBox.scrollHeight;
+}
+
+function isScrolledToBottom() {
+    if ((resultBox.scrollHeight - resultBox.offsetHeight) - resultBox.scrollTop < 5) { // if within 5px of bottom
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+function checkIfNewMessage(currentInfoDownload) {
+    if (lastInfoDownload == currentInfoDownload) {
+        return false;
+    }
+    else {
+        return true;
+    }
+}
+
+function update() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {// Typical action to be performed when the document is ready:
+        var response = xhttp.responseText;
+        updateDisplay(response);
+    }
+    };
+    xhttp.open('GET', 'readTxt.php?file=' + 'upctxt.txt');
+    xhttp.send();
+}
+
+function updateDisplay(messagesAsString) {
+    var wasScrolledToBottom = isScrolledToBottom();
+    var prevScroll = resultBox.scrollTop;
+
+    var messagesAsArray = messagesAsString.split(messageSep);
+    resultBox.innerHTML = '';
+    for (var messageNum = 0; messageNum < messagesAsArray.length; messageNum ++) {
+        var message = JSON.parse(messagesAsArray[messageNum]);
+        resultBox.innerHTML += message.username + ': ' + message.content + '<br><br>';
+    }
+
+    var isNewMessage = checkIfNewMessage(messagesAsString);
+    if (isFirstUpdate) {
+        stickScroll();
+    }
+    else if (wasScrolledToBottom && isNewMessage) {
+        stickScroll();
+    }
+    else {
+        resultBox.scrollTop = prevScroll;
+    }
+    isFirstUpdate = false;
+    lastInfoDownload = messagesAsString;
+}
+
+function userClearChat() {
+    if (confirm('Are you sure that you want to clear all chat history?')) {
+        clearChat();
+    }
+}
+
+function clearChat() {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.open('GET', 'clearTxt.php?txtFile=upctxt.txt');
+    xmlhttp.send();
+    sendToServer(setupMessage, 'upctxt.txt');
+}
+
+function onLoadSetup(existingData) {
+    var loadMessage = new Message('UPC-SETUP', 'A new user has joined the chat');
+    if (existingData.length > 0) {
+        sendToServer(messageSep + loadMessage.stringify(), 'upctxt.txt');
+    }
+    else {
+        sendToServer(messageSep + loadMessage.stringify(), 'upctxt.txt');
+    }
+}
+
+inputField.addEventListener("keyup", function(event) {
+    if (event.keyCode === 13) {
+        event.preventDefault();
+        submit();
+    }
+});
+
+var xhttp = new XMLHttpRequest();
+xhttp.onreadystatechange = function() {
+if (this.readyState == 4 && this.status == 200) {// Typical action to be performed when the document is ready:
+    var response = xhttp.responseText;
+    onLoadSetup(response);
+}
+};
+xhttp.open('GET', 'readTxt.php?file=' + 'upctxt.txt');
+xhttp.send();
+
+setInterval(update, 1000);
+</script>
+
+</html>

@@ -26,3 +26,7 @@
 - Fixed problem where topbar was slightly (~5-10px) too wide and made side scroll possible - changed display to block
 - Made changelog look better with bullet points
 - Made everything v 0.?.? because it's a pre release version
+
+#### v 0.2.2 - 6 April 2020
+- We bought the server!
+- Pushed a few projects, tests etc up. Also, this is my first time working from vscode on my main computer (not repl), so it's also a test
