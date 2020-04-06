@@ -1,0 +1,21 @@
+#resultBox {
+    overflow-y: scroll;
+    height: 60vh;
+    width: 60vw;
+    border: 1px solid black;
+    padding: 10px;
+}
+
+#inputTable {
+    margin: 5px 40px;
+    vertical-align: top;
+    padding: 10px;
+}
+
+#inputTableLeft {
+    width: 400px;
+}
+
+#inputField {
+    width: 250px;
+}
