@@ -2,4 +2,5 @@ Homepage&/homepage*
 Example Project&/exampleProject*
 Sandy Editor&/sandyEditor*
 Minesweeper&/minesweeper*
-Unnamed Prototype Chat&/upc
+Unnamed Prototype Chat&/upc*
+P5 Whiteboard&/p5Whiteboard
