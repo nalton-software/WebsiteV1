@@ -9,6 +9,9 @@ const eraserCheckbox = document.getElementById('eraserCheckbox');
 const minPenSize = 1;
 const maxPenSize = 50;
 
+const whiteboard = new Whiteboard();
+var bgColor = 100;
+
 function setup() {
     canvas = createCanvas(width, height);
     canvas.parent('canvas');
@@ -88,10 +91,8 @@ function sendMessage() {
     chatArea.sendMessage();
 }
 
-const whiteboard = new Whiteboard();
-var bgColor = 100;
-
 const chatArea = new ChatArea('chatArea');
+console.log(new ServerCommunicator())
 
 function draw() { 
     background(bgColor);

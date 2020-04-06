@@ -1,43 +1,43 @@
 class ServerCommunicator {
-    constructor() {}
+    constructor() {
+        this.lastResponse = null;
+    }
     
     callPhp(url) { // doesn't return echo
-
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+        }
+        xmlhttp.open('POST', url);
+        xmlhttp.send();
     }
 
     callPhpEcho(url) { // returns echo
 
     }
 
-    sendDataPhpA(url, data) { // IS A STUB. AS STUB DOES APPEND doesn't return echo
-        if (localStorage[url]) {
-            localStorage[url] = localStorage[url] + data;
+    sendDataPhp(url, data) { // doesn't return echo
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
         }
-        else {
-            localStorage[url] = data;
-        }
-    }
-
-    sendDataPhp(url, data) { // IS A TEST METHOD, WILL BE DELETED, DOESN'T APPEND
-        localStorage[url] = data;
+        xmlhttp.open('POST', url, true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.send(data);
     }
 
     sendDataPhpEcho(url, data) { // returns echo
 
     }
 
-    fetchFile(url) { // IS A STUB
-        /*var promise = fetch(url);
-
-        if (response.ok) { // if HTTP-status is 200-299
-            // get the response body (the method explained below)
-            var data = await response.text();
+    fetchFile(url, onfetchFunction) { // will call onfetchfunction with response
+        // (use arrow function if you don't want seperate function)
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {// Typical action to be performed when the document is ready:
+            var response = xhttp.responseText;
+            onfetchFunction(response);
         }
-        else {
-            console.log('HTTP-Error: ' + response.status);
-        }
-        return data;*/
-        
-        return localStorage.getItem(url);
+        };
+        xhttp.open('GET', url);
+        xhttp.send();
     }
 }

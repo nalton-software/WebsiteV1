@@ -30,3 +30,5 @@
 #### v 0.2.2 - 6 April 2020
 - We bought the server!
 - Pushed a few projects, tests etc up. Also, this is my first time working from vscode on my main computer (not repl), so it's also a test
+- Added my p5whiteboard project. The chat doesn't work yet, so don't get excited
+- Updated upc to Nalton standard, changed ajax from get to post

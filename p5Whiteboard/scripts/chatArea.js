@@ -4,7 +4,10 @@ class ChatArea {
         this.serverComm = new ServerCommunicator();
 
         //consts
-        this.messageFileName = '!chatmessages';
+        this.messageFileName = '../!chatmessages.txt';
+        this.txtEditor = 'editTxt.php';
+        this.txtClearer = 'clearTxt.php';
+        this.txtReader = null;
         
         this.joinRoom();
     }
@@ -13,8 +16,9 @@ class ChatArea {
         this.username = prompt('Enter username:');
         var joinMessage = new Message(this.username, this.username + ' has joined');
 
-        var prevMessagesStr = this.serverComm.fetchFile(this.messageFileName);
-        if (prevMessagesStr !== null) {
+        this.serverComm.fetchFile(this.messageFileName, function(prevMessagesStr) {
+
+        if (prevMessagesStr !== null && prevMessagesStr.length > 0) {
             var prevMessages = JSON.parse(prevMessagesStr);
             prevMessages.push(joinMessage);
             var newMessageFile = JSON.stringify(prevMessages);
@@ -22,11 +26,14 @@ class ChatArea {
         else {
             var newMessageFile = JSON.stringify([joinMessage]);
         }
-        this.serverComm.sendDataPhp(this.messageFileName, newMessageFile);
+        var data = 'txtFile=' + this.messageFileName + '&data=' + newMessageFile;
+        this.serverComm.sendDataPhp(this.txtEditor, data);
+
+        });
     }
 
     update() {
-        var messagesStr = this.serverComm.fetchFile(this.messageFileName);
+        var messagesStr = this.serverComm.fetchFile(this.messageFileName, console.log);
         var messages = JSON.parse(messagesStr);
         console.log(messages);
     }
@@ -35,11 +42,20 @@ class ChatArea {
         var contents = prompt('Enter message content');
         var message = new Message(this.username, contents);
 
-        var prevMessagesStr = this.serverComm.fetchFile(this.messageFileName);
-        var prevMessages = JSON.parse(prevMessagesStr);
-        prevMessages.push(message);
+        this.serverComm.fetchFile(this.messageFileName, function(prevMessagesStr) {
+            console.log(prevMessagesStr)
+        if (prevMessagesStr !== null && prevMessagesStr.length > 0) {
+            var prevMessages = JSON.parse(prevMessagesStr);
+            prevMessages.push(message);
+        }
+        else {
+            var prevMessages = [message];
+        }
         var newMessageFile = JSON.stringify(prevMessages);
-        this.serverComm.sendDataPhp(this.messageFileName, newMessageFile);
+
+        var data = 'txtFile=' + this.messageFileName + '&data=' + newMessageFile;
+        this.serverComm.sendDataPhp(this.txtEditor, data);
+        });
     }
 }
 

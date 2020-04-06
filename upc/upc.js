@@ -35,11 +35,11 @@ function sendToServer(data, file) {// file is file to write into, not the php fi
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             response = xmlhttp.responseText;
-            //console.log(response);
         }
     }
-    xmlhttp.open("GET", "editTxt.php?txtFile=" + file + "&data=" + data);
-    xmlhttp.send();
+    xmlhttp.open('POST', 'editTxt.php', true);
+    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.send('txtFile=' + file + '&data=' + data);
 }
 
 function stickScroll() {
@@ -109,8 +109,10 @@ function userClearChat() {
 
 function clearChat() {
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open('GET', 'clearTxt.php?txtFile=upctxt.txt');
-    xmlhttp.send();
+    xmlhttp.open('POST', 'clearTxt.php', true);
+    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.send('txtFile=upctxt.txt');
+
     sendToServer(setupMessage, 'upctxt.txt');
 }
 
