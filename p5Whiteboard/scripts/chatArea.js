@@ -4,7 +4,7 @@ class ChatArea {
         this.serverComm = new ServerCommunicator();
 
         //consts
-        this.messageFileName = '../!chatmessages.txt';
+        this.messageFileName = '!chatmessages.txt';
         this.txtEditor = 'editTxt.php';
         this.txtClearer = 'clearTxt.php';
         this.txtReader = null;
@@ -17,6 +17,7 @@ class ChatArea {
         var joinMessage = new Message(this.username, this.username + ' has joined');
 
         this.serverComm.fetchFile(this.messageFileName, function(prevMessagesStr) {
+        console.log(prevMessagesStr)
 
         if (prevMessagesStr !== null && prevMessagesStr.length > 0) {
             var prevMessages = JSON.parse(prevMessagesStr);

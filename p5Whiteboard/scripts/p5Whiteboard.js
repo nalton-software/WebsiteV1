@@ -92,7 +92,6 @@ function sendMessage() {
 }
 
 const chatArea = new ChatArea('chatArea');
-console.log(new ServerCommunicator())
 
 function draw() { 
     background(bgColor);
