@@ -1,0 +1,7 @@
+class Topbar {
+    constructor() {}
+
+    joinRoom() {
+        
+    }
+}
