@@ -8,6 +8,8 @@ const newMessageNoise1 = {pitch: 610, durationInSeconds: 0.12, waveForm: 'square
 const newMessageNoise2 = {pitch: 590, durationInSeconds: 0.23, waveForm: 'square'};
 var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
+const bannedUsernames = ['status', 'upc-setup', 'warn', 'error', 'server', 'james bond'];
+
 var lastInfoDownload = '';
 var isFirstUpdate = true;
 
@@ -45,10 +47,24 @@ function submit() {
         username = 'anonymous';
     }
 
-    var message = new Message(username, content);
-    sendToServer(messageSep + message.stringify(), 'upctxt.txt');
-    inputField.value = '';
-    stickScroll();
+    if (! usernameIsBanned(username)) {
+        var message = new Message(username, content);
+        sendToServer(messageSep + message.stringify(), 'upctxt.txt');
+        inputField.value = '';
+        stickScroll();
+    }
+    else {
+        alert('That username is banned! You cannot use it, as it is system-specific.');
+    }
+}
+
+function usernameIsBanned(username) {
+    if (bannedUsernames.includes(username.toLocaleLowerCase())) {
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 
 function sendToServer(data, file) {// file is file to write into, not the php file
