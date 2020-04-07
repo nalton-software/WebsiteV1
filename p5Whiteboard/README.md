@@ -25,4 +25,8 @@
 - in rooms it says this ain't interactive, fix this when it is
 
 #### ChatArea
-- relies on global roomId - sets its room id to that in 
+- relies on global roomId - sets its room id to that in
+- it is death with the databasing
+- idk even what is working with that databasing
+- but it should work with some tweaks
+- tweaks needed: fix code in joinRoom so that it doesn't use 'this' in the after fetching function

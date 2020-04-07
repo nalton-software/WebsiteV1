@@ -13,11 +13,14 @@ class ChatArea {
         this.txtReader = null;
     }
 
-    joinRoom() {
+    joinRoomStart() {
         this.username = prompt('Enter username:');
         this.roomId = prompt('Enter room id:');
 
-        this.serverComm.fetchFile(this.messageFileName, function(roomDataStr) {
+        this.serverComm.fetchFile(this.messageFileName, this.joinRoom);
+    }
+
+    joinRoom(roomDataStr) {
         var joinMessage = new Message(this.username, this.username + ' has joined');
 
         var roomData = this.roomHandler.parseRoomData(roomDataStr);
@@ -26,7 +29,6 @@ class ChatArea {
 
         var dataToSend = 'txtFile=' + this.messageFileName + '&data=' + newRoomDataStr;
         this.serverComm.sendDataPhp(this.txtEditor, dataToSend);
-        });
     }
 
     update() {

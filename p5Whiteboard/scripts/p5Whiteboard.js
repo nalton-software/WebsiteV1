@@ -11,7 +11,6 @@ const maxPenSize = 50;
 
 const whiteboard = new Whiteboard();
 const chatArea = new ChatArea('chatArea');
-var roomId = prompt('Enter room Id');
 var bgColor = 100;
 
 function setup() {
@@ -94,7 +93,7 @@ function sendMessage() {
 }
 
 function joinRoom() {
-    chatArea.joinRoom();
+    chatArea.joinRoomStart();
 }
 
 function draw() { 
