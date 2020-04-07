@@ -8,6 +8,7 @@ const newMessageNoise1 = {pitch: 610, durationInSeconds: 0.12, waveForm: 'square
 const newMessageNoise2 = {pitch: 590, durationInSeconds: 0.23, waveForm: 'square'};
 var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
+// these are all lowercase as the username is converted to lowercase before being checked
 const bannedUsernames = ['status', 'upc-setup', 'warn', 'error', 'server', 'james bond'];
 
 var lastInfoDownload = '';
