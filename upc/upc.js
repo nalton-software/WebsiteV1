@@ -4,6 +4,10 @@ const inputField = document.getElementById('inputField');
 const nameField = document.getElementById('nameField');
 const resultBox = document.getElementById('resultBox');
 
+const newMessageNoise1 = {pitch: 610, durationInSeconds: 0.12, waveForm: 'square'};
+const newMessageNoise2 = {pitch: 590, durationInSeconds: 0.23, waveForm: 'square'};
+var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
 var lastInfoDownload = '';
 var isFirstUpdate = true;
 
@@ -15,6 +19,23 @@ var Message = function(username, content) {
 Message.prototype.stringify = function() {
     return JSON.stringify(this);
 };
+
+function playNote(pitch, durationInSeconds, waveFormOptional) {
+    if (waveFormOptional == undefined) {
+        waveForm = 'sine'
+    }
+    else {
+        waveForm = waveFormOptional;
+    }
+    // create Oscillator node
+    var oscillator = audioCtx.createOscillator();
+
+    oscillator.type = waveForm;
+    oscillator.frequency.value = pitch; // value in hertz
+    oscillator.connect(audioCtx.destination);
+    oscillator.start(0);
+    oscillator.stop(audioCtx.currentTime + durationInSeconds);
+}
 
 function submit() {
     var content = inputField.value;
@@ -97,8 +118,23 @@ function updateDisplay(messagesAsString) {
     else {
         resultBox.scrollTop = prevScroll;
     }
+
+    var lastMessage = JSON.parse(messagesAsArray[messagesAsArray.length -1]);
+    var username = nameField.value;
+
+    if (lastInfoDownload != messagesAsString && lastMessage.username != username) { // if new message
+        makeNewMessageTone();
+    }
+
     isFirstUpdate = false;
     lastInfoDownload = messagesAsString;
+}
+
+function makeNewMessageTone() {
+    playNote(newMessageNoise1.pitch, newMessageNoise1.durationInSeconds, newMessageNoise1.waveForm);
+    setTimeout(function() {
+        playNote(newMessageNoise2.pitch, newMessageNoise2.durationInSeconds, newMessageNoise2.waveForm);
+    }, newMessageNoise1.durationInSeconds * 1000);
 }
 
 function userClearChat() {
