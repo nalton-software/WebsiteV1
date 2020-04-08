@@ -4,12 +4,13 @@ const inputField = document.getElementById('inputField');
 const nameField = document.getElementById('nameField');
 const resultBox = document.getElementById('resultBox');
 
-const newMessageNoise1 = {pitch: 610, durationInSeconds: 0.12, waveForm: 'square'};
+const newMessageNoise1 = {pitch: 610, durationInSeconds: 0.15, waveForm: 'square'};
 const newMessageNoise2 = {pitch: 590, durationInSeconds: 0.23, waveForm: 'square'};
 var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
 // these are all lowercase as the username is converted to lowercase before being checked
-const bannedUsernames = ['status', 'upc-setup', 'warn', 'error', 'server', 'james bond'];
+const bannedUsernames = ['status', 'upc-setup', 'warn', 'error', 'server', 'james bond', 'upcsetup', 'upc setup'];
+const bannedChars = [messageSep];
 
 var lastInfoDownload = '';
 var isFirstUpdate = true;
@@ -48,24 +49,42 @@ function submit() {
         username = 'anonymous';
     }
 
-    if (! usernameIsBanned(username)) {
+    if (usernameValid(username)) {
         var message = new Message(username, content);
         sendToServer(messageSep + message.stringify(), 'upctxt.txt');
         inputField.value = '';
         stickScroll();
     }
     else {
-        alert('That username is banned! You cannot use it, as it is system-specific.');
+        if (findBannedCharacters(username).length > 0) { // if problem is a banned character
+            alert('There are some banned characters in your username: ' + findBannedCharacters(username));
+        }
+        else { // if it is a system username
+            alert('Your username is banned! You cannot use it, as it is system-specific');
+        }
+        nameField.value = '';
     }
 }
 
-function usernameIsBanned(username) {
+function usernameValid(username) {
+    var valid = true;
     if (bannedUsernames.includes(username.toLocaleLowerCase())) {
-        return true;
+        valid = false;
     }
-    else {
-        return false;
+    if (findBannedCharacters(username).length > 0) {
+        valid = false;
     }
+    return valid;
+}
+
+function findBannedCharacters(username) {
+    var bannedCharactersFound = [];
+    for (var i = 0; i < bannedChars.length; i ++) {
+        if (username.includes(bannedChars[i])) {
+            bannedCharactersFound.push(bannedChars[i]);
+        }
+    }
+    return bannedCharactersFound;
 }
 
 function sendToServer(data, file) {// file is file to write into, not the php file
@@ -119,10 +138,12 @@ function updateDisplay(messagesAsString) {
     var prevScroll = resultBox.scrollTop;
 
     var messagesAsArray = messagesAsString.split(messageSep);
-    resultBox.innerHTML = '';
+    resultBox.innerText = ''; // it is important that innertext is used here and not innerhtml,
+    // as if innerhtml is used, then you can write html code and possibly embed a script somehow,
+    // and that is bad for security
     for (var messageNum = 0; messageNum < messagesAsArray.length; messageNum ++) {
         var message = JSON.parse(messagesAsArray[messageNum]);
-        resultBox.innerHTML += message.username + ': ' + message.content + '<br><br>';
+        resultBox.innerText += message.username + ': ' + message.content + '\n\n';
     }
 
     var isNewMessage = checkIfNewMessage(messagesAsString);
