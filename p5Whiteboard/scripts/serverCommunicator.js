@@ -10,8 +10,23 @@ class ServerCommunicator {
         xmlhttp.send();
     }
 
-    callPhpEcho(url) { // returns echo
-
+    callPhpEcho(url, callbackFunction, callbackFunctionArg) { // returns echo
+        // callbackFunctionArg is optional, useful for functions like this.method.bind(this)
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {// Typical action to be performed when the document is ready:
+            var response = xhttp.responseText;
+            console.log(callbackFunctionArg)
+            if (callbackFunctionArg != undefined) {
+                callbackFunction(response, callbackFunctionArg);
+            }
+            else {
+                callbackFunction(response);
+            }
+        }
+        };
+        xhttp.open('GET', url);
+        xhttp.send();
     }
 
     sendDataPhp(url, data) { // doesn't return echo
@@ -19,21 +34,27 @@ class ServerCommunicator {
         xmlhttp.onreadystatechange = function() {
         }
         xmlhttp.open('POST', url, true);
-        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xmlhttp.send(data);
     }
 
-    sendDataPhpEcho(url, data) { // returns echo
+    sendDataPhpEcho(url, data, callbackFunction) { // runs callbackfunction with echo as param
 
     }
 
-    fetchFile(url, onFetchFunction) { // will call onfetchfunction with response
+    fetchFile(url, onFetchFunction, onFetchFunctionArg) { // will call onfetchfunction with response
         // (use arrow function if you don't want seperate function)
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {// Typical action to be performed when the document is ready:
             var response = this.responseText;
-            onFetchFunction(response);
+            // this strange piece of code here allows a copy of 'this' to be passed around easily. It's weird.
+            if (onFetchFunctionArg != undefined) {
+                onFetchFunction(response, onFetchFunctionArg);
+            }
+            else {
+                onFetchFunction(response);
+            }
         }
         };
         xhttp.open('GET', url, true);

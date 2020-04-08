@@ -32,3 +32,8 @@
 - Pushed a few projects, tests etc up. Also, this is my first time working from vscode on my main computer (not repl), so it's also a test
 - Added my p5whiteboard project. The chat doesn't work yet, so don't get excited
 - Updated upc to Nalton standard, changed ajax from get to post
+
+#### v 1.0 - 8 April 2020
+- Finally upgraded to version 1!
+- Tweaked upc a bit more - added banned usernames, added noise on message receive, fixed bug where tags in message act as actual html tags
+ 

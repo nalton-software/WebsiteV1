@@ -6,11 +6,20 @@ const fr = 30;
 const penSizeSlider = document.getElementById('penSize');
 const eraserCheckbox = document.getElementById('eraserCheckbox');
 
+const roomDataUrlForPhp = '../!roomdata.txt'; // these two are like this because I use fetch AND php call
+const roomDataUrlForHTML = '!roomdata.txt';
+const txtEditorUrl = 'scripts/editTxt.php';
+const txtClearerUrl = 'scripts/clearTxt.php';
+const txtReaderUrl = 'scripts/readTxt.php';
+
+const txtReaderUrlQuery = txtReaderUrl + '?file=' + roomDataUrlForPhp;
+
 const minPenSize = 1;
 const maxPenSize = 50;
 
 const whiteboard = new Whiteboard();
 const chatArea = new ChatArea('chatArea');
+const roomHandler = new RoomHandler();
 var bgColor = 100;
 
 function setup() {
@@ -94,6 +103,10 @@ function sendMessage() {
 
 function joinRoom() {
     chatArea.joinRoomStart();
+}
+
+function createRoom() {
+    roomHandler.createEmptyRoomStart();
 }
 
 function draw() { 

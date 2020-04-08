@@ -2,37 +2,31 @@ class ChatArea {
     constructor(displayDivId) {
         this.displayDiv = document.getElementById(displayDivId);
         this.serverComm = new ServerCommunicator();
-        this.roomHandler = new RoomHandler();
 
         this.roomId = null;
-
-        //consts
-        this.messageFileName = '!roomdata.txt';
-        this.txtEditor = 'editTxt.php';
-        this.txtClearer = 'clearTxt.php';
-        this.txtReader = null;
     }
 
     joinRoomStart() {
         this.username = prompt('Enter username:');
         this.roomId = prompt('Enter room id:');
 
-        this.serverComm.fetchFile(this.messageFileName, this.joinRoom);
+        this.serverComm.fetchFile(roomDataUrlForHTML, this.joinRoom.bind(this));
     }
 
     joinRoom(roomDataStr) {
+        console.log('yo')
         var joinMessage = new Message(this.username, this.username + ' has joined');
 
-        var roomData = this.roomHandler.parseRoomData(roomDataStr);
-        this.roomHandler.addMessageToRoom(roomData, this.roomId, joinMessage);
-        var newRoomDataStr = this.roomHandler.stringifyRoomData(roomData);
+        var roomData = roomHandler.parseRoomData(roomDataStr);
+        roomHandler.addMessageToRoom(roomData, this.roomId, joinMessage);
+        var newRoomDataStr = roomHandler.stringifyRoomData(roomData);
 
-        var dataToSend = 'txtFile=' + this.messageFileName + '&data=' + newRoomDataStr;
-        this.serverComm.sendDataPhp(this.txtEditor, dataToSend);
+        var dataToSend = 'txtFile=' + roomDataUrlForPhp + '&data=' + newRoomDataStr;
+        this.serverComm.sendDataPhp(txtEditorUrl, dataToSend);
     }
 
     update() {
-        this.serverComm.fetchFile(this.messageFileName, console.log);
+        this.serverComm.fetchFile(roomDataUrlForHTML, console.log);
     }
 
     sendMessage() {
@@ -40,13 +34,13 @@ class ChatArea {
             var contents = prompt('Enter message content');
             var message = new Message(this.username, contents);
 
-            this.serverComm.fetchFile(this.messageFileName, function(roomDataStr) {
-                var roomData = this.roomHandler.parseRoomData(roomDataStr);
-                this.roomHandler.addMessageToRoom(roomData, this.roomId, message);
-                var newRoomDataStr = this.roomHandler.stringifyRoomData(roomData);
+            this.serverComm.fetchFile(roomDataUrlForHTML, function(roomDataStr) {
+                var roomData = roomHandler.parseRoomData(roomDataStr);
+                roomHandler.addMessageToRoom(roomData, this.roomId, message);
+                var newRoomDataStr = roomHandler.stringifyRoomData(roomData);
         
-                var dataToSend = 'txtFile=' + this.messageFileName + '&data=' + newRoomDataStr;
-                this.serverComm.sendDataPhp(this.txtEditor, dataToSend);
+                var dataToSend = 'txtFile=' + roomDataUrlForPhp + '&data=' + newRoomDataStr;
+                this.serverComm.sendDataPhp(txtEditorUrl, dataToSend);
             });
         }
     }
@@ -69,28 +63,28 @@ class Room {
 }
 
 class RoomHandler {
-    constructor() {}
+    constructor() {
+        this.serverComm = new ServerCommunicator();
+    }
 
     parseRoomData(roomDataStr) {
-        if (roomData !== null) {
-            if (roomDataStr.length > 0) {
-                return JSON.parse(roomDataStr);
-            }
-            else {
-                return null;
+        var roomData = null;
+        if (roomDataStr !== undefined) {
+            if (roomDataStr !== null) {
+                if (roomDataStr.length > 0) {
+                    return JSON.parse(roomDataStr);
+                }
             }
         }
-        else {
-            return null;
-        }
+        return roomData;
     }
 
     stringifyRoomData(roomData) {
         if (roomData !== null) {
-            roomDataStr = JSON.stringify(roomData);
+            var roomDataStr = JSON.stringify(roomData);
         }
         else {
-            roomDataStr = '';
+            var roomDataStr = '';
         }
         return roomDataStr;
     }
@@ -113,5 +107,27 @@ class RoomHandler {
         if (room !== null) {
             room.chatMessages.push(message);
         }
+    }
+
+    createEmptyRoomStart() {
+        var roomName = prompt('Enter room name:');
+        var roomId = prompt('Enter room id:'); // only temporary
+        this.emptyRoom = new Room(roomName, roomId); // I do this so I can transfer to the below function easily
+        var thisPointer = this;
+        this.serverComm.callPhpEcho(txtReaderUrlQuery, this.createEmptyRoom.bind(this), thisPointer);
+    }
+
+    createEmptyRoom(roomDataStr, thisPointer) {
+        console.log(roomDataStr)
+        if (roomDataStr.length > 0) {
+            var roomData = thisPointer.parseRoomData(roomDataStr);
+            roomData.push(thisPointer.emptyRoom);
+        }
+        else {
+            var roomData = [thisPointer.emptyRoom];
+        }
+        var roomDataStr = thisPointer.stringifyRoomData(roomData);
+        var dataToSend = 'txtFile=' + roomDataUrlForPhp + '&data=' + roomDataStr;
+        thisPointer.serverComm.sendDataPhp(txtEditorUrl, dataToSend);
     }
 }
