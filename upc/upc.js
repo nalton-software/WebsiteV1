@@ -136,17 +136,19 @@ function update() {
 function updateDisplay(messagesAsString) {
     var wasScrolledToBottom = isScrolledToBottom();
     var prevScroll = resultBox.scrollTop;
-
-    var messagesAsArray = messagesAsString.split(messageSep);
-    resultBox.innerText = ''; // it is important that innertext is used here and not innerhtml,
-    // as if innerhtml is used, then you can write html code and possibly embed a script somehow,
-    // and that is bad for security
-    for (var messageNum = 0; messageNum < messagesAsArray.length; messageNum ++) {
-        var message = JSON.parse(messagesAsArray[messageNum]);
-        resultBox.innerText += message.username + ': ' + message.content + '\n\n';
-    }
-
     var isNewMessage = checkIfNewMessage(messagesAsString);
+
+    // if there is a new message, redraw the text
+    if (isNewMessage) {
+        var messagesAsArray = messagesAsString.split(messageSep);
+        resultBox.innerText = ''; // it is important that innertext is used here and not innerhtml,
+        // as if innerhtml is used, then you can write html code and possibly embed a script somehow,
+        // and that is bad for security
+        for (var messageNum = 0; messageNum < messagesAsArray.length; messageNum ++) {
+            var message = JSON.parse(messagesAsArray[messageNum]);
+            resultBox.innerText += message.username + ': ' + message.content + '\n\n';
+        }
+    }
     if (isFirstUpdate) {
         stickScroll();
     }

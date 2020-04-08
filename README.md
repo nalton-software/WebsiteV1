@@ -35,5 +35,5 @@
 
 #### v 1.0 - 8 April 2020
 - Finally upgraded to version 1!
-- Tweaked upc a bit more - added banned usernames, added noise on message receive, fixed bug where tags in message act as actual html tags
+- Tweaked upc a bit more - added banned usernames, added noise on message receive, fixed bug where tags in message act as actual html tags, made it only redraw when new message - this allows highlighting of things in the output (without this, whenever it redrew, it would reset your selectionstart/end, messing up your highlighting)
  
