@@ -16,11 +16,13 @@ const txtReaderUrlQuery = txtReaderUrl + '?file=' + roomDataUrlForPhp;
 
 const minPenSize = 1;
 const maxPenSize = 50;
+const bgColor = 100;
 
 const whiteboard = new Whiteboard();
-const chatArea = new ChatArea('chatArea');
-const roomHandler = new RoomHandler();
-var bgColor = 100;
+const serverCommsManager = new ServerCommsManager();
+const chatDrawer = new ChatDrawer('chatArea');
+
+const chatUpdateFrequency = 1000; // in ms
 
 function setup() {
     canvas = createCanvas(width, height);
@@ -94,19 +96,31 @@ function getEraserOn() {
 }
 
 function clearWhiteboard() {
-    whiteboard.clear();
+    if (confirm('Are you sure that you want to clear the whiteboard?')) {
+        whiteboard.clear();
+    }
 }
 
 function sendMessage() {
-    chatArea.sendMessage();
+    serverCommsManager.sendChatMessage();
 }
 
 function joinRoom() {
-    chatArea.joinRoomStart();
+    serverCommsManager.joinRoom();
 }
 
 function createRoom() {
-    roomHandler.createEmptyRoomStart();
+    serverCommsManager.createEmptyRoom();
+}
+
+function updateChat() {
+    if (serverCommsManager.isInRoom()) {
+        serverCommsManager.downloadRoomData(function(roomDataStr) {
+            var roomData = serverCommsManager.parseRoomData(roomDataStr);
+            var messages = serverCommsManager.getMessages(roomData);
+            chatDrawer.displayMessages(messages);
+        });
+    }
 }
 
 function draw() { 
@@ -115,3 +129,5 @@ function draw() {
 
     whiteboard.update(getColor(), getPenSize(), getEraserOn());
 }
+
+setInterval(updateChat, chatUpdateFrequency);

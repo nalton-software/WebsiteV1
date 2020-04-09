@@ -7,15 +7,13 @@
     <link rel="stylesheet" href="style.css">
 
     <script src="scripts/p5.min.js" defer></script>
-
+    <script src="scripts/dictionary.js" defer></script>
     <script src="scripts/serverCommunicator.js" defer></script>
-    <script src="scripts/chatArea.js" defer></script>
-
     <script src="scripts/shape.js" defer></script>
     <script src="scripts/whiteboard.js" defer></script>
+    <script src="scripts/chatDrawer.js" defer></script>
 
-    <script src="scripts/topbar.js" defer></script>
-    
+    <script src="scripts/serverCommsManager.js" defer></script>    
     <script src="scripts/p5Whiteboard.js" defer></script>
   </head>
 
@@ -55,11 +53,11 @@
         <button style="margin-left: 20px" onclick="clearWhiteboard()">Clear All</button>
       </td>
 
-      <td id="chatArea">
+      <td id="chatAreaHolder">
         <h2>Chat</h2>
         <hr>
+        <div id="chatArea"></div>
         <button class="bottomAlign" onclick="sendMessage()">Send message</button>
-        </div>
       </td>
     </tr>
   </table>
