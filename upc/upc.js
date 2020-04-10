@@ -1,5 +1,6 @@
-const messageSep = '|';
-const setupMessage = '{"username":"UPC-SETUP","content":"Welcome to Unnamed Protoype chat"}';
+const setupMessage = {'username' : 'UPC-SETUP', 'content' : 'Welcome to Unnamed Protoype chat'};
+const loadMessage = {'username' : 'UPC-SETUP', 'content' : 'A new user has joined the chat'};
+
 const inputField = document.getElementById('inputField');
 const nameField = document.getElementById('nameField');
 const resultBox = document.getElementById('resultBox');
@@ -9,20 +10,13 @@ const newMessageNoise2 = {pitch: 590, durationInSeconds: 0.23, waveForm: 'square
 var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
 // these are all lowercase as the username is converted to lowercase before being checked
+// the checking is also done in php, but it doesn't return error message to user...
+// if they accidentally do it, so this is still here
 const bannedUsernames = ['status', 'upc-setup', 'warn', 'error', 'server', 'james bond', 'upcsetup', 'upc setup'];
-const bannedChars = [messageSep];
+const bannedChars = [];
 
 var lastInfoDownload = '';
 var isFirstUpdate = true;
-
-var Message = function(username, content) {
-    this.username = username;
-    this.content = content;
-};
-
-Message.prototype.stringify = function() {
-    return JSON.stringify(this);
-};
 
 function playNote(pitch, durationInSeconds, waveFormOptional) {
     if (waveFormOptional == undefined) {
@@ -50,8 +44,7 @@ function submit() {
     }
 
     if (usernameValid(username)) {
-        var message = new Message(username, content);
-        sendToServer(messageSep + message.stringify(), 'upctxt.txt');
+        sendMessage(username, content);
         inputField.value = '';
         stickScroll();
     }
@@ -66,17 +59,6 @@ function submit() {
     }
 }
 
-function usernameValid(username) {
-    var valid = true;
-    if (bannedUsernames.includes(username.toLocaleLowerCase())) {
-        valid = false;
-    }
-    if (findBannedCharacters(username).length > 0) {
-        valid = false;
-    }
-    return valid;
-}
-
 function findBannedCharacters(username) {
     var bannedCharactersFound = [];
     for (var i = 0; i < bannedChars.length; i ++) {
@@ -87,16 +69,30 @@ function findBannedCharacters(username) {
     return bannedCharactersFound;
 }
 
-function sendToServer(data, file) {// file is file to write into, not the php file
+function usernameValid(username) {
+    var valid = true;
+    if (bannedUsernames.includes(username.toLocaleLowerCase())) {
+        //valid = false; temporarily disable to test php version of test
+    }
+    if (findBannedCharacters(username).length > 0) {
+        valid = false;
+    }
+    return valid;
+}
+
+function sendMessage(username, content) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             response = xmlhttp.responseText;
+            if (response === 'badUsername') { // badUsername is php echo for when it finds a bad username
+                alert('Your username is banned! You cannot use it, as it is system-specific');
+            }
         }
     }
-    xmlhttp.open('POST', 'editTxt.php', true);
+    xmlhttp.open('POST', 'addMessage.php', true);
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xmlhttp.send('txtFile=' + file + '&data=' + data);
+    xmlhttp.send('username=' + username + '&content=' + content);
 }
 
 function stickScroll() {
@@ -134,40 +130,46 @@ function update() {
 }
 
 function updateDisplay(messagesAsString) {
-    var wasScrolledToBottom = isScrolledToBottom();
-    var prevScroll = resultBox.scrollTop;
-    var isNewMessage = checkIfNewMessage(messagesAsString);
+    if (messagesAsString.length > 0 && messagesAsString != 'null' && messagesAsString !== null) {
+        var wasScrolledToBottom = isScrolledToBottom();
+        var prevScroll = resultBox.scrollTop;
+        var isNewMessage = checkIfNewMessage(messagesAsString);
+        var messageList = JSON.parse(messagesAsString);
 
-    // if there is a new message, redraw the text
-    if (isNewMessage) {
-        var messagesAsArray = messagesAsString.split(messageSep);
-        resultBox.innerText = ''; // it is important that innertext is used here and not innerhtml,
-        // as if innerhtml is used, then you can write html code and possibly embed a script somehow,
-        // and that is bad for security
-        for (var messageNum = 0; messageNum < messagesAsArray.length; messageNum ++) {
-            var message = JSON.parse(messagesAsArray[messageNum]);
-            resultBox.innerText += message.username + ': ' + message.content + '\n\n';
+        // if there is a new message, redraw the text
+        if (isNewMessage) {
+            resultBox.innerText = ''; // it is important that innertext is used here and not innerhtml,
+            // as if innerhtml is used, then you can write html code and possibly embed a script somehow,
+            // and that is bad for security
+            for (var messageNum = 0; messageNum < messageList.length; messageNum ++) {
+                var message = messageList[messageNum];
+                resultBox.innerText += message.username + ': ' + message.content + '\n\n';
+            }
         }
-    }
-    if (isFirstUpdate) {
-        stickScroll();
-    }
-    else if (wasScrolledToBottom && isNewMessage) {
-        stickScroll();
+        if (isFirstUpdate) {
+            stickScroll();
+        }
+        else if (wasScrolledToBottom && isNewMessage) {
+            stickScroll();
+        }
+        else {
+            resultBox.scrollTop = prevScroll;
+        }
+
+        var lastMessage = messageList[messageList.length - 1];
+        var username = nameField.value;
+
+        if (lastInfoDownload != messagesAsString && lastMessage.username != username) { // if new message
+            makeNewMessageTone();
+        }
+
+        isFirstUpdate = false;
+        lastInfoDownload = messagesAsString;
     }
     else {
-        resultBox.scrollTop = prevScroll;
+        resultBox.innerHTML = 'There don\'t seem to be any messages in the conversation. \
+        Why don\'t you start the conversation?';
     }
-
-    var lastMessage = JSON.parse(messagesAsArray[messagesAsArray.length -1]);
-    var username = nameField.value;
-
-    if (lastInfoDownload != messagesAsString && lastMessage.username != username) { // if new message
-        makeNewMessageTone();
-    }
-
-    isFirstUpdate = false;
-    lastInfoDownload = messagesAsString;
 }
 
 function makeNewMessageTone() {
@@ -189,17 +191,11 @@ function clearChat() {
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xmlhttp.send('txtFile=upctxt.txt');
 
-    sendToServer(setupMessage, 'upctxt.txt');
+    sendMessage(setupMessage.username, setupMessage.content);
 }
 
-function onLoadSetup(existingData) {
-    var loadMessage = new Message('UPC-SETUP', 'A new user has joined the chat');
-    if (existingData.length > 0) {
-        sendToServer(messageSep + loadMessage.stringify(), 'upctxt.txt');
-    }
-    else {
-        sendToServer(messageSep + loadMessage.stringify(), 'upctxt.txt');
-    }
+function onLoadSetup() {
+    sendMessage(loadMessage.username, loadMessage.content);
 }
 
 inputField.addEventListener("keyup", function(event) {
@@ -209,14 +205,7 @@ inputField.addEventListener("keyup", function(event) {
     }
 });
 
-var xhttp = new XMLHttpRequest();
-xhttp.onreadystatechange = function() {
-if (this.readyState == 4 && this.status == 200) {// Typical action to be performed when the document is ready:
-    var response = xhttp.responseText;
-    onLoadSetup(response);
-}
-};
-xhttp.open('GET', 'readTxt.php?file=' + 'upctxt.txt');
-xhttp.send();
+
+onLoadSetup();
 
 setInterval(update, 1000);
