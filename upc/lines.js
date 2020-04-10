@@ -25,6 +25,3 @@ class Spam {
         this.count = -1;
     }
 }
-
-
-
