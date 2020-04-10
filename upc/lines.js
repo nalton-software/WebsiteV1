@@ -1,3 +1,5 @@
+// make one of these objects and then MAKE IT WREAK HAVOC!
+
 class Spam {
     constructor(name, char, speedMs) {
         this.name = name;
