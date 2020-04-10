@@ -5,7 +5,7 @@ const inputField = document.getElementById('inputField');
 const nameField = document.getElementById('nameField');
 const resultBox = document.getElementById('resultBox');
 
-const newMessageNoise1 = {pitch: 610, durationInSeconds: 0.15, waveForm: 'square'};
+const newMessageNoise1 = {pitch: 610, durationInSeconds: 0.17, waveForm: 'square'};
 const newMessageNoise2 = {pitch: 590, durationInSeconds: 0.23, waveForm: 'square'};
 var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
