@@ -11,6 +11,7 @@ const roomDataUrlForHTML = '!roomdata.txt';
 const txtEditorUrl = 'scripts/editTxt.php';
 const txtClearerUrl = 'scripts/clearTxt.php';
 const txtReaderUrl = 'scripts/readTxt.php';
+const addMessageUrl = 'scripts/addMessage.php';
 
 const txtReaderUrlQuery = txtReaderUrl + '?file=' + roomDataUrlForPhp;
 

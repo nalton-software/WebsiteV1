@@ -17,6 +17,10 @@ class ServerCommsManager {
     createEmptyRoom2(roomDataStr, argList) {
         var roomId = argList[0];
         var roomName = argList[1];
+
+        console.log(roomDataStr.length > 0);
+
+        var roomIdUnique = true; // set this here because if the 'else' case goes ahead below - it only is set in the 'if'
         if (roomDataStr.length > 0) {
             var roomData = this.parseRoomData(roomDataStr);
             var roomIdUnique = this.getRoom(roomData, roomId) === null;
@@ -52,23 +56,22 @@ class ServerCommsManager {
     }
 
     joinRoom2(roomDataStr, roomId) {
+        console.log(roomDataStr)
         var roomData = this.parseRoomData(roomDataStr);
         var roomExists = (this.getRoom(roomData, roomId) !== null);
-        
         if (roomExists) {
             this.roomId = roomId;
             var room = this.getRoom(roomData, this.roomId);
             this.roomName = room.name;
-
 
             if (this.username === null) {
                 this.username = prompt(dictionary.usernamePrompt);
             }
 
             // send join message
-            var joinMessage = new Message(this.username, this.username + ' has joined');
-            this.downloadRoomData(this.sendChatMessage2.bind(this), joinMessage);
-            this.sendChatMessage2(joinMessage);
+            var content = this.username + ' has joined the chat';
+            var data = `username=${dictionary.chatSystemName}&content=${content}&roomId=${this.roomId}`;
+            this.serverComm.sendDataPhp(dictionary.addMessageUrl, data);
         }
         else {
             alert(dictionary.nonExistentRoomWarning);
@@ -77,26 +80,10 @@ class ServerCommsManager {
 
     sendChatMessage() {
         if (this.roomId !== null && this.checkUsername()) {
-            var contents = prompt(dictionary.messageContentPrompt);
-            var message = new Message(this.username, contents);
-
-            this.downloadRoomData(this.sendChatMessage2.bind(this), message);
+            var content = prompt(dictionary.messageContentPrompt);
+            var data = `username=${this.username}&content=${content}&roomId=${this.roomId}`;
+            this.serverComm.sendDataPhp(dictionary.addMessageUrl, data);
         }
-        else if (this.roomId === null) {
-            alert(dictionary.notInRoomWarning);
-        }
-        else if (this.checkUsername() == false) {
-            alert(dictionary.badUsernameWarning);
-        }
-    }
-
-    sendChatMessage2(roomDataStr, message) {
-        var roomData = this.parseRoomData(roomDataStr);
-        this.addMessageToRoom(roomData, this.roomId, message);
-        var newRoomDataStr = this.stringifyRoomData(roomData);
-
-        var dataToSend = 'txtFile=' + roomDataUrlForPhp + '&data=' + newRoomDataStr;
-        this.serverComm.sendDataPhp(txtEditorUrl, dataToSend);
     }
 
     parseRoomData(roomDataStr) {
@@ -122,7 +109,7 @@ class ServerCommsManager {
     }
 
     downloadRoomData(callbackFunction, callbackFunctionArgs) {
-        this.serverComm.callPhpEcho(txtReaderUrlQuery, callbackFunction, callbackFunctionArgs);
+        this.serverComm.callPhpEcho(dictionary.readTxtUrlQuery, callbackFunction, callbackFunctionArgs);
     }
 
     getMessages(roomData) {
@@ -149,13 +136,6 @@ class ServerCommsManager {
             }
         }
         return room;
-    }
-
-    addMessageToRoom(rooms, roomId, message) {
-        var room = this.getRoom(rooms, roomId);
-        if (room !== null) {
-            room.chatMessages.push(message);
-        }
     }
     
     checkUsername() {
