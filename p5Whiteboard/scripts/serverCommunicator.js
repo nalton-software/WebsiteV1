@@ -31,6 +31,10 @@ class ServerCommunicator {
     sendDataPhp(url, data) { // doesn't return echo
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var response = this.responseText;
+                console.log(response);
+            }
         }
         xmlhttp.open('POST', url, true);
         xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -38,7 +42,16 @@ class ServerCommunicator {
     }
 
     sendDataPhpEcho(url, data, callbackFunction) { // runs callbackfunction with echo as param
-
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var response = this.responseText;
+                callbackFunction(response);
+            }
+        }
+        xmlhttp.open('POST', url, true);
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.send(data);
     }
 
     fetchFile(url, onFetchFunction, onFetchFunctionArg) { // will call onfetchfunction with response

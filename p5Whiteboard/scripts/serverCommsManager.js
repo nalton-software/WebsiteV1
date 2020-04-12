@@ -1,89 +1,96 @@
 class ServerCommsManager {
-    constructor() {
+    constructor(roomDataShowerId) {
         this.serverComm = new ServerCommunicator();
+
+        this.roomDataShower = document.getElementById(roomDataShowerId);
 
         this.roomId = null;
         this.roomName = null;
         this.username = null;
     }
 
-    createEmptyRoom() {
-        var roomName = prompt('Enter room name:');
-        var roomId = prompt('Enter room id:'); // only temporary
-        this.emptyRoom = new Room(roomName, roomId);
-        this.downloadRoomData(this.createEmptyRoom2.bind(this), [roomId, roomName]);
+    handleServerError(echoFromServer) {
+        var errorOccured = false;
+
+        var startOfEcho = echoFromServer.substring(0, dictionary.serverErrorPrefix.length);
+        if (startOfEcho === dictionary.serverErrorPrefix) {
+            errorOccured = true;
+            var echoMinusPrefix = echoFromServer.substring(dictionary.serverErrorPrefix.length);
+            var dictionaryKey = 'ERROR' + echoMinusPrefix;
+            console.error('code: ' + echoMinusPrefix + 'meaning: ' + dictionary[dictionaryKey]);
+        }
+        return errorOccured;
     }
 
-    createEmptyRoom2(roomDataStr, argList) {
-        var roomId = argList[0];
-        var roomName = argList[1];
+    createEmptyRoom() {
+        var roomName = prompt('Enter room name:');
+        this.creatingRoomId = prompt('Enter room id:'); // only temporary
+        var data = `roomname=${roomName}&roomId=${this.creatingRoomId}`;
+        this.serverComm.sendDataPhpEcho(dictionary.createRoomUrl, data, this.createEmptyRoomEnd.bind(this));
+    }
 
-        console.log(roomDataStr.length > 0);
-
-        var roomIdUnique = true; // set this here because if the 'else' case goes ahead below - it only is set in the 'if'
-        if (roomDataStr.length > 0) {
-            var roomData = this.parseRoomData(roomDataStr);
-            var roomIdUnique = this.getRoom(roomData, roomId) === null;
-            if (roomIdUnique) {
-                roomData.push(this.emptyRoom);
-            }
-        }
-        else {
-            var roomData = [this.emptyRoom];
-        }
-
-        if (roomIdUnique) { // success case
-            var roomDataStr = this.stringifyRoomData(roomData);
-            var dataToSend = 'txtFile=' + roomDataUrlForPhp + '&data=' + roomDataStr;
-            this.serverComm.sendDataPhp(txtEditorUrl, dataToSend);
-
-            this.roomId = roomId;
-            this.roomName = roomName;
-            // set username if the user hasn't done that already
+    createEmptyRoomEnd(echoFromServer) {
+        var errorOccured = this.handleServerError(echoFromServer);
+        if (! errorOccured) {
             if (this.username === null) {
                 this.username = prompt(dictionary.usernamePrompt);
             }
-        }
-        else { // fail case 1
-            alert('That room id is already in use');
+            this.roomId = this.creatingRoomId;
         }
     }
 
     joinRoom() {
-        var roomId = prompt('Enter room id:');
+        this.joiningRoomId = prompt('Enter room id:');
         // {check room id for null etc}
-        this.downloadRoomData(this.joinRoom2.bind(this), roomId);
+        var data = `roomId=${this.joiningRoomId}`;
+        this.serverComm.sendDataPhpEcho(dictionary.joinRoomUrl, data, this.joinRoomEnd.bind(this));
     }
 
-    joinRoom2(roomDataStr, roomId) {
-        console.log(roomDataStr)
-        var roomData = this.parseRoomData(roomDataStr);
-        var roomExists = (this.getRoom(roomData, roomId) !== null);
-        if (roomExists) {
-            this.roomId = roomId;
-            var room = this.getRoom(roomData, this.roomId);
-            this.roomName = room.name;
-
+    joinRoomEnd(echoFromServer) {
+        var errorOccured = this.handleServerError(echoFromServer);
+        if (! errorOccured && echoFromServer === 'success') {
             if (this.username === null) {
                 this.username = prompt(dictionary.usernamePrompt);
             }
 
-            // send join message
-            var content = this.username + ' has joined the chat';
-            var data = `username=${dictionary.chatSystemName}&content=${content}&roomId=${this.roomId}`;
+            this.roomId = this.joiningRoomId;
+
+            var content = this.username + ' has joined the room';
+            var data = `username=${dictionary.userEndProgramName}&content=${content}&roomId=${this.roomId}`;
             this.serverComm.sendDataPhp(dictionary.addMessageUrl, data);
-        }
-        else {
-            alert(dictionary.nonExistentRoomWarning);
         }
     }
 
     sendChatMessage() {
-        if (this.roomId !== null && this.checkUsername()) {
+        if (this.roomId !== null) {
             var content = prompt(dictionary.messageContentPrompt);
             var data = `username=${this.username}&content=${content}&roomId=${this.roomId}`;
             this.serverComm.sendDataPhp(dictionary.addMessageUrl, data);
         }
+    }
+
+    updateTopBar() {
+        if (this.isInRoom()) {
+            var roomDataText = `You are in ${this.roomName} (room id: ${this.roomId})`;
+        }
+        else {
+            var roomDataText = dictionary.notInRoomText;
+        }
+        this.roomDataShower.innerText = roomDataText; // don't use innerHTML for security
+    }
+
+    isInRoom() {
+        if (this.roomId === null) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    // these last four are just used for updating the other classes, not for calling php or editing data
+    downloadRoomData(callbackFunction, callbackFunctionArgs) {
+        this.serverComm.callPhpEcho(txtReaderUrlQuery, callbackFunction, callbackFunctionArgs);
     }
 
     parseRoomData(roomDataStr) {
@@ -98,18 +105,17 @@ class ServerCommsManager {
         return roomData;
     }
 
-    stringifyRoomData(roomData) {
-        if (roomData !== null) {
-            var roomDataStr = JSON.stringify(roomData);
+    getRoom(rooms, roomId) {
+        var room = null;
+        if (rooms !== null) {
+            for (var i = 0; i < rooms.length; i ++) {
+                if (rooms[i].id == roomId) {
+                    room = rooms[i];
+                    break;
+                }
+            }
         }
-        else {
-            var roomDataStr = '';
-        }
-        return roomDataStr;
-    }
-
-    downloadRoomData(callbackFunction, callbackFunctionArgs) {
-        this.serverComm.callPhpEcho(dictionary.readTxtUrlQuery, callbackFunction, callbackFunctionArgs);
+        return room;
     }
 
     getMessages(roomData) {
@@ -123,36 +129,6 @@ class ServerCommsManager {
             }
         }
         return messages;
-    }
-
-    getRoom(rooms, roomId) {
-        var room = null;
-        if (rooms !== null) {
-            for (var i = 0; i < rooms.length; i ++) {
-                if (rooms[i].id == roomId) {
-                    room = rooms[i];
-                    break;
-                }
-            }
-        }
-        return room;
-    }
-    
-    checkUsername() {
-        var usernameOk = true;
-        if (this.username === null || typeof this.username === 'object') {
-            usernameOk = false;
-        }
-        return usernameOk;
-    }
-
-    isInRoom() {
-        if (this.roomId !== null) {
-            return true;
-        }
-        else {
-            return false;
-        }
     }
 }
 

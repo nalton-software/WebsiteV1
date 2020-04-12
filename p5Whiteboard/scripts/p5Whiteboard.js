@@ -20,9 +20,10 @@ const maxPenSize = 50;
 const bgColor = 100;
 
 const whiteboard = new Whiteboard();
-const serverCommsManager = new ServerCommsManager();
+const serverCommsManager = new ServerCommsManager('roomDataShower');
 const chatDrawer = new ChatDrawer('chatArea');
 
+const SCMUpdateFrequency = 2000;
 const chatUpdateFrequency = 1000; // in ms
 
 function setup() {
@@ -124,6 +125,10 @@ function updateChat() {
     }
 }
 
+function updateSCM() {
+    serverCommsManager.updateTopBar();
+}
+
 function draw() { 
     background(bgColor);
     //drawBorders();
@@ -131,4 +136,5 @@ function draw() {
     whiteboard.update(getColor(), getPenSize(), getEraserOn());
 }
 
+setInterval(updateSCM, SCMUpdateFrequency)
 setInterval(updateChat, chatUpdateFrequency);

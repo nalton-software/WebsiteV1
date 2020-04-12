@@ -1,9 +1,7 @@
 <?php
+// this script basically just verifies if the room exists
 const roomDataFileUrl = "../!roomdata.txt";
-//$bannedUsernames = file_get_contents("../bannedUsernames.txt");
 
-$username = $_POST["username"];
-$content = $_POST["content"];
 $roomId = $_POST["roomId"];
 
 // (check data - implement in future)
@@ -17,18 +15,16 @@ if (strlen($roomDataStr) > 0 && $roomDataStr !== null) {
     $roomData = json_decode($roomDataStr);
     $room = getRoom($roomData, $roomId);
 
-    // check if room was found
+    // check if room exists
     if ($room !== null) {
-        // make message
-        $message = new stdClass();
-        $message->sender = $username;
-        $message->content = $content;
-
-        // add message to room, put in file
-        array_push($room->chatMessages, $message);
-        $roomDataStr = json_encode($roomData);
-        file_put_contents(roomDataFileUrl, $roomDataStr);
+        echo "success";
     }
+    else {
+        echo "room not found";
+    }
+}
+else {
+    echo "**roomFileEmpty";
 }
 
 function getRoom($roomData, $roomId) {
