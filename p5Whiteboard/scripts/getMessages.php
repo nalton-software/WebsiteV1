@@ -1,23 +1,21 @@
 <?php
-// this script basically just verifies if the room exists
 const roomDataFileUrl = "../!roomdata.txt";
 
 $roomId = $_POST["roomId"];
 
-// (check data - implement in future)
-
-// read file
+// read data from file
 $roomDataStr = file_get_contents(roomDataFileUrl);
 
-// do checks for null, empty file
-if (strlen($roomDataStr) > 0 && $roomDataStr !== null) {
-    // parse data, get room
+if (strlen($roomDataStr) > 0) {
+    // parse data, find room    
     $roomData = json_decode($roomDataStr);
     $room = getRoom($roomData, $roomId);
 
     // check if room exists
     if ($room !== null) {
-        echo "success";
+        // get messages and send them back
+        $messages = $room->chatMessages;
+        echo json_encode($messages);
     }
     else {
         echo "||nonExistentRoom";
@@ -38,4 +36,5 @@ function getRoom($roomData, $roomId) {
     }
     return $room;
 }
+
 ?>

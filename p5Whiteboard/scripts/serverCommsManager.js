@@ -5,7 +5,7 @@ class ServerCommsManager {
         this.roomDataShower = document.getElementById(roomDataShowerId);
 
         this.roomId = null;
-        this.roomName = null;
+        this.roomname = null;
         this.username = null;
     }
 
@@ -16,48 +16,94 @@ class ServerCommsManager {
         if (startOfEcho === dictionary.serverErrorPrefix) {
             errorOccured = true;
             var echoMinusPrefix = echoFromServer.substring(dictionary.serverErrorPrefix.length);
-            var dictionaryKey = 'ERROR' + echoMinusPrefix;
-            console.error('code: ' + echoMinusPrefix + 'meaning: ' + dictionary[dictionaryKey]);
+            var dictionaryKey = dictionary.jsErrorPrefix + echoMinusPrefix;
+            var message = 'ERROR! errorCode: ' + echoMinusPrefix + '; meaning: ' + dictionary[dictionaryKey]
+            console.error(message);
+            alert(message);
         }
         return errorOccured;
     }
 
+    handleServerWarning(echoFromServer) { 
+        var warningSent = false;
+
+        var startOfEcho = echoFromServer.substring(0, dictionary.serverErrorPrefix.length);
+        if (startOfEcho === dictionary.serverWarningPrefix) {
+            warningSent = true;
+        }
+        return warningSent;
+    }
+
+    getWarningBody(warning) {
+        return warning.substring(dictionary.serverWarningPrefix.length);
+    }
+
     createEmptyRoom() {
-        var roomName = prompt('Enter room name:');
+        var roomname = prompt('Enter room name:');
         this.creatingRoomId = prompt('Enter room id:'); // only temporary
-        var data = `roomname=${roomName}&roomId=${this.creatingRoomId}`;
+        var data = `roomname=${roomname}&roomId=${this.creatingRoomId}`;
         this.serverComm.sendDataPhpEcho(dictionary.createRoomUrl, data, this.createEmptyRoomEnd.bind(this));
     }
 
     createEmptyRoomEnd(echoFromServer) {
         var errorOccured = this.handleServerError(echoFromServer);
-        if (! errorOccured) {
-            if (this.username === null) {
-                this.username = prompt(dictionary.usernamePrompt);
-            }
-            this.roomId = this.creatingRoomId;
+        var warningSent = this.handleServerWarning(echoFromServer);
+        if (! errorOccured && ! warningSent) {
+            this.joinRoom(this.creatingRoomId);
+        } 
+        else if (warningSent) {
+            var warningBody = this.getWarningBody(echoFromServer);
+            var dictionaryKey = dictionary.jsWarningPrefix + warningBody;
+            alert(dictionary[dictionaryKey]);
         }
     }
 
-    joinRoom() {
-        this.joiningRoomId = prompt('Enter room id:');
+    joinRoom(roomId) { // an arg is used here to make it easier to be called from other methods of this
+
         // {check room id for null etc}
-        var data = `roomId=${this.joiningRoomId}`;
+
+        this.joiningRoomId = roomId;
+
+        var data = `roomId=${roomId}`;
         this.serverComm.sendDataPhpEcho(dictionary.joinRoomUrl, data, this.joinRoomEnd.bind(this));
     }
 
     joinRoomEnd(echoFromServer) {
         var errorOccured = this.handleServerError(echoFromServer);
-        if (! errorOccured && echoFromServer === 'success') {
+        var warningSent = this.handleServerWarning(echoFromServer);
+        if (! errorOccured && ! warningSent && echoFromServer === 'success') {
             if (this.username === null) {
                 this.username = prompt(dictionary.usernamePrompt);
             }
 
-            this.roomId = this.joiningRoomId;
+            this.successJoinProtocol();
+        }
+        else if (warningSent) {
+            var warningBody = this.getWarningBody(echoFromServer);
+            var dictionaryKey = dictionary.jsWarningPrefix + warningBody;
+            alert(dictionary[dictionaryKey]);
+        }
+    }
 
-            var content = this.username + ' has joined the room';
-            var data = `username=${dictionary.userEndProgramName}&content=${content}&roomId=${this.roomId}`;
-            this.serverComm.sendDataPhp(dictionary.addMessageUrl, data);
+    successJoinProtocol() {
+        this.roomId = this.joiningRoomId;
+
+        // find name of room that has been joined
+        var data = `roomId=${this.roomId}`;
+        this.serverComm.sendDataPhpEcho(dictionary.getRoomNameUrl, data, this.successJoinProtocolEnd.bind(this));
+
+        // send join message
+        var content = this.username + ' has joined the room';
+        var data = `username=${dictionary.userEndProgramName}&content=${content}&roomId=${this.roomId}`;
+        this.serverComm.sendDataPhp(dictionary.addMessageUrl, data);
+    }
+
+    successJoinProtocolEnd(response) {
+        if (this.handleServerError(response) === false) {
+            this.roomname = response;
+
+            // make the room-name-shower update really quickly and smoothly
+            this.updateTopBar();
         }
     }
 
@@ -71,7 +117,7 @@ class ServerCommsManager {
 
     updateTopBar() {
         if (this.isInRoom()) {
-            var roomDataText = `You are in ${this.roomName} (room id: ${this.roomId})`;
+            var roomDataText = `You are in ${this.roomname} (room id: ${this.roomId})`;
         }
         else {
             var roomDataText = dictionary.notInRoomText;
@@ -88,47 +134,9 @@ class ServerCommsManager {
         }
     }
 
-    // these last four are just used for updating the other classes, not for calling php or editing data
-    downloadRoomData(callbackFunction, callbackFunctionArgs) {
-        this.serverComm.callPhpEcho(txtReaderUrlQuery, callbackFunction, callbackFunctionArgs);
-    }
-
-    parseRoomData(roomDataStr) {
-        var roomData = null;
-        if (roomDataStr !== undefined) {
-            if (roomDataStr !== null) {
-                if (roomDataStr.length > 0) {
-                    return JSON.parse(roomDataStr);
-                }
-            }
-        }
-        return roomData;
-    }
-
-    getRoom(rooms, roomId) {
-        var room = null;
-        if (rooms !== null) {
-            for (var i = 0; i < rooms.length; i ++) {
-                if (rooms[i].id == roomId) {
-                    room = rooms[i];
-                    break;
-                }
-            }
-        }
-        return room;
-    }
-
-    getMessages(roomData) {
-        var messages = null;
-        if (roomData !== null) {
-            messages = [];
-            var room = this.getRoom(roomData, this.roomId);
-            var roomMessages = room.chatMessages;
-            for (var i = 0; i < roomMessages.length; i ++) {
-                messages.push(roomMessages[i]);
-            }
-        }
-        return messages;
+    downloadMessagesStr(callbackFunction, callbackFunctionArg) {
+        var data = `roomId=${this.roomId}`;
+        this.serverComm.sendDataPhpEcho(dictionary.getMessagesUrl, data, callbackFunction, callbackFunctionArg);
     }
 }
 

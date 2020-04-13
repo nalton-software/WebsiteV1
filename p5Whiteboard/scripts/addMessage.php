@@ -29,6 +29,12 @@ if (strlen($roomDataStr) > 0 && $roomDataStr !== null) {
         $roomDataStr = json_encode($roomData);
         file_put_contents(roomDataFileUrl, $roomDataStr);
     }
+    else {
+        echo "||nonExistentRoom";
+    }
+}
+else {
+    echo "**roomFileEmpty";
 }
 
 function getRoom($roomData, $roomId) {

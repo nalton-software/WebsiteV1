@@ -108,7 +108,8 @@ function sendMessage() {
 }
 
 function joinRoom() {
-    serverCommsManager.joinRoom();
+    var joiningRoomId = prompt('Enter room id:');
+    serverCommsManager.joinRoom(joiningRoomId);
 }
 
 function createRoom() {
@@ -117,16 +118,21 @@ function createRoom() {
 
 function updateChat() {
     if (serverCommsManager.isInRoom()) {
-        serverCommsManager.downloadRoomData(function(roomDataStr) {
-            var roomData = serverCommsManager.parseRoomData(roomDataStr);
-            var messages = serverCommsManager.getMessages(roomData);
-            chatDrawer.displayMessages(messages);
+        serverCommsManager.downloadMessagesStr(function(messagesStr) {
+            chatDrawer.displayMessages(JSON.parse(messagesStr));
         });
     }
 }
 
 function updateSCM() {
     serverCommsManager.updateTopBar();
+}
+
+function onStartFunctions() {
+    setInterval(updateSCM, SCMUpdateFrequency)
+    setInterval(updateChat, chatUpdateFrequency);
+
+    updateSCM();
 }
 
 function draw() { 
@@ -136,5 +142,4 @@ function draw() {
     whiteboard.update(getColor(), getPenSize(), getEraserOn());
 }
 
-setInterval(updateSCM, SCMUpdateFrequency)
-setInterval(updateChat, chatUpdateFrequency);
+onStartFunctions();

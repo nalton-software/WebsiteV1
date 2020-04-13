@@ -7,9 +7,16 @@
 #### Notes:
 - When I say interactive, I mean computer-to-computer interactive across the server
 - JS null has been used across this project as a 'not found' signifier
+
+#### Errors:
 - When there is an error in one of the php scripts, it will echo an error name (found in dictionary.js)
+- These errors start with **
 - In dictionary.js, where they are stored for the program to use, the errors are the same as the code echoed by the php exept that the ** is replaced by ERROR
-- These error names start with **
+- Warnings (like when the user types in a non-existent id) are also kept in dictionary, a bit lower down
+
+#### Warnings:
+- Like errors, but instead of the ** prefix, they have a || prefix
+- Are kept in dictionary.js except that the || prefix is replaced with WARN
 
 #### Room/Message classes:
 - as this is an interactive program, there are multiple rooms so that people can have their own private whiteboard
@@ -29,9 +36,16 @@
 - That's all I have time for
 - in other classes it says this is not interactive, fix this when it is
 
-#### ServerCommsManager:
+#### ServerCommsManager class:
 - This class knows the inns and outs of the php scripts that are on the server
 - It has a bunch of methods that will probably be moved in future, these are used by chatDrawer (and whiteboard in future) to download data. They don't manipulate or change it, and they don't send any of it back up (so it's secure)
+- Don't get it confused with ServerCommunicator, which only calls the scripts
+
+#### ServerCommunicator class:
+- Very simple and very portable
+- Calls scripts and other server-related things
+- the args callbackFunction and callbackFunctionArg are in all of the methods that give a server response
+- callbackFunction is called on response (with the response as first arg), and if callbackFunctionArg is defined callbackFunction is called with the args response, callbackFunctionArg
 
 #### addMessage.php:
 - Call using AJAX POST method
@@ -48,4 +62,15 @@
 #### joinRoom.php:
 - Call using AJAX POST method
 - Takes params 'roomId'
-- Checks if room object exists - echoes 'success' if it does, 'room not found' if it doesn't
+- Checks if room object exists - echoes 'success' if it does, errors/warnings if it doesn't
+
+#### getRoomName.php
+- Call using AJAX POST method
+- Takes params 'roomId'
+- Returns the room name that belongs to that id, giving an error if it can't find the room
+
+#### getMessages.php
+- Call using AJAX POST method
+- Takes params 'roomId'
+- Finds the room with roomId and then echoes a stringified version of the messages in that room
+- Used so far by chatDrawer.js, through serverCommsManager

@@ -14,19 +14,38 @@ if (strlen($roomDataStr) > 0 && $roomDataStr !== null) {
     // parse data
     $roomData = json_decode($roomDataStr);
 
-    // make room
-    $room = new stdClass();
-    $room->name = $roomname;
-    $room->id = $roomId;
-    $room->whiteboardData = [];
-    $room->chatMessages = [];
+    // check if there is another room with that id, don't proceed if there is
+    $roomIdUnique = getRoom($roomData, $roomId) === null;
+    if ($roomIdUnique) {
+        // make room
+        $room = new stdClass();
+        $room->name = $roomname;
+        $room->id = $roomId;
+        $room->whiteboardData = [];
+        $room->chatMessages = [];
 
-    // add message to room, put in file
-    array_push($roomData, $room);
-    $roomDataStr = json_encode($roomData);
-    file_put_contents(roomDataFileUrl, $roomDataStr);
+        // add message to room, put in file
+        array_push($roomData, $room);
+        $roomDataStr = json_encode($roomData);
+        file_put_contents(roomDataFileUrl, $roomDataStr);
+    }
+    else {
+        echo "||roomIdDuplicated";
+    }
 }
 else {
     echo "**roomFileEmpty";
+}
+
+function getRoom($roomData, $roomId) {
+    $room = null;
+    for ($i = 0; $i < count($roomData); $i ++) {
+        $currentRoom = $roomData[$i];
+        if ($currentRoom->id === $roomId) {
+            $room = $currentRoom;
+            break;
+        }
+    }
+    return $room;
 }
 ?>

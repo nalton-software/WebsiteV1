@@ -1,23 +1,16 @@
 <?php
-// this script basically just verifies if the room exists
 const roomDataFileUrl = "../!roomdata.txt";
 
 $roomId = $_POST["roomId"];
 
-// (check data - implement in future)
-
-// read file
 $roomDataStr = file_get_contents(roomDataFileUrl);
-
-// do checks for null, empty file
-if (strlen($roomDataStr) > 0 && $roomDataStr !== null) {
-    // parse data, get room
+if (strlen($roomDataStr) > 0) {
     $roomData = json_decode($roomDataStr);
     $room = getRoom($roomData, $roomId);
-
-    // check if room exists
+    
     if ($room !== null) {
-        echo "success";
+        $roomname = $room->name;
+        echo $roomname;
     }
     else {
         echo "||nonExistentRoom";

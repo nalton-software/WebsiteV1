@@ -41,12 +41,17 @@ class ServerCommunicator {
         xmlhttp.send(data);
     }
 
-    sendDataPhpEcho(url, data, callbackFunction) { // runs callbackfunction with echo as param
+    sendDataPhpEcho(url, data, callbackFunction, callbackFunctionArg) { // runs callbackfunction with echo as param
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 var response = this.responseText;
-                callbackFunction(response);
+                if (callbackFunctionArg != undefined) {
+                    callbackFunction(response, callbackFunctionArg);
+                }
+                else {
+                    callbackFunction(response);
+                }
             }
         }
         xmlhttp.open('POST', url, true);
