@@ -72,7 +72,7 @@ function findBannedCharacters(username) {
 function usernameValid(username) {
     var valid = true;
     if (bannedUsernames.includes(username.toLocaleLowerCase())) {
-        //valid = false; temporarily disable to test php version of test
+        valid = false;
     }
     if (findBannedCharacters(username).length > 0) {
         valid = false;

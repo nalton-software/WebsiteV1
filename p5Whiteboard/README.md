@@ -1,12 +1,30 @@
-###### Readme for p5whiteboard
+# Readme for p5whiteboard
+
+## Contents:
+- [Introduction](#Introduction)
+- [Assorted information](#Assorted-Information)
+- [Detailed Class Information](#Detailed-Class-Information)
+- [Php Script Information](#Php-Script-Information)
+
+
+## Introduction:
+[Contents](#Contents)
+
+This program, when complete, will have virtual 'rooms' in which users can draw on whiteboards and talk in a chat. It uses txt files on the server for most data storage, and some user-specific things like usernames are kept in localStorage. PHP is used as the back end scripting language, and the front end is JavaScript/HTML/CSS as it is a web application. The only JS library used is p5.js, which is very useful for the whiteboard, although it has not been used much (if at all) in the other parts of the program.
+The bulk of the program is broken up into a number of JS files, kept in the scripts/ folder. p5Whiteboard.js is the main file in that it connects all of the other ones together. It contains the draw loop for php and binds the HTML buttons to the other files. All of the JS files apart from p5Whiteboard.js consist of a single main class, and some other classes that have no methods and are simply used to store data. Some of the classes are portable, while others are very specific to this application.
+
+
+## Assorted Information:
+[Contents](#Contents)
+#### Random Notes:
+- When I say interactive, I mean computer-to-computer interactive across the server
+- JS null has been used across this project as a 'not found' / not yet defined signifier
+- I have named my data-storage-places (as in files, not vars) with a ! at the start to make them stand out more and make them generally more difficult to break
+
 #### Basic layout:
 - There is a class for every major element - whiteboard, chatdrawer, manager, etc
 - each class is mostly independant of the others (except for Message and Shape, which are handled by the server-talker (name tbd) and Whiteboard respectively)
 - SCM has occasionally been used as an abbreviation for ServerCommsManager
-
-#### Notes:
-- When I say interactive, I mean computer-to-computer interactive across the server
-- JS null has been used across this project as a 'not found' signifier
 
 #### Errors:
 - When there is an error in one of the php scripts, it will echo an error name (found in dictionary.js)
@@ -18,6 +36,9 @@
 - Like errors, but instead of the ** prefix, they have a || prefix
 - Are kept in dictionary.js except that the || prefix is replaced with WARN
 
+
+## Detailed Class Information:
+[Contents](#Contents)
 #### Room/Message classes:
 - as this is an interactive program, there are multiple rooms so that people can have their own private whiteboard
 - so far, only the chat is interactive
@@ -38,7 +59,7 @@
 
 #### ServerCommsManager class:
 - This class knows the inns and outs of the php scripts that are on the server
-- It has a bunch of methods that will probably be moved in future, these are used by chatDrawer (and whiteboard in future) to download data. They don't manipulate or change it, and they don't send any of it back up (so it's secure)
+- It has a few methods that will probably be moved in future, these are used by chatDrawer (and whiteboard in future) that call php to download message data. They don't manipulate or change it, and they don't send any of it back up (so it's secure)
 - Don't get it confused with ServerCommunicator, which only calls the scripts
 
 #### ServerCommunicator class:
@@ -47,6 +68,19 @@
 - the args callbackFunction and callbackFunctionArg are in all of the methods that give a server response
 - callbackFunction is called on response (with the response as first arg), and if callbackFunctionArg is defined callbackFunction is called with the args response, callbackFunctionArg
 
+#### ChatDrawer class:
+- Manages the chat area
+- Updates chat using the method displayMessages(messagesStr)
+- In that method it also does the scrolling
+- The scrolling has three cases:
+1. You just joined the room: scroll to bottom
+2. You were at the bottom and a new message came: scroll to new bototm
+3. (default) You were not at the bottom and a new message came / a new message didn't come: scroll back to were you were before the new message was drawn
+- I think this works, but I'm not sure as I haven't had a chance to test it thoroughly with two computers - only two tabs
+
+
+## Php Script Information:
+[Contents](#Contents)
 #### addMessage.php:
 - Call using AJAX POST method
 - Takes params 'username', 'content', and 'roomId'

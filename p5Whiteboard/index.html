@@ -18,7 +18,7 @@
   </head>
 
   <body>
-  <table>
+  <table id="outerTable">
     <tr>
       <th id="topbar" colspan="2"><!--topbar-->
         <h1>P5 Whiteboard</h1>
@@ -54,10 +54,18 @@
       </td>
 
       <td id="chatAreaHolder">
+        <!-- these divs are like this so that I can use js to set the height of the middle one -->
+        <div id="chatAreaTitle">
         <h2>Chat</h2>
         <hr>
+        </div>
+        
         <div id="chatArea"></div>
-        <button class="bottomAlign" onclick="sendMessage()">Send message</button>
+
+        <div id="chatAreaBottom">
+        <input type="text" id="messageInputBox">
+        <button id="sendMessageButton" onclick="sendMessage()">Send message</button>
+        </div>
       </td>
     </tr>
   </table>

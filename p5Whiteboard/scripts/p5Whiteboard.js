@@ -5,15 +5,7 @@ const height = 400;
 const fr = 30;
 const penSizeSlider = document.getElementById('penSize');
 const eraserCheckbox = document.getElementById('eraserCheckbox');
-
-const roomDataUrlForPhp = '../!roomdata.txt'; // these two are like this because I use fetch AND php call
-const roomDataUrlForHTML = '!roomdata.txt';
-const txtEditorUrl = 'scripts/editTxt.php';
-const txtClearerUrl = 'scripts/clearTxt.php';
-const txtReaderUrl = 'scripts/readTxt.php';
-const addMessageUrl = 'scripts/addMessage.php';
-
-const txtReaderUrlQuery = txtReaderUrl + '?file=' + roomDataUrlForPhp;
+const messageInputBox = document.getElementById('messageInputBox');
 
 const minPenSize = 1;
 const maxPenSize = 50;
@@ -117,9 +109,10 @@ function createRoom() {
 }
 
 function updateChat() {
+    fixChatAreaSize();
     if (serverCommsManager.isInRoom()) {
         serverCommsManager.downloadMessagesStr(function(messagesStr) {
-            chatDrawer.displayMessages(JSON.parse(messagesStr));
+            chatDrawer.displayMessages(messagesStr);
         });
     }
 }
@@ -128,9 +121,35 @@ function updateSCM() {
     serverCommsManager.updateTopBar();
 }
 
+function fixChatAreaSize() {
+    var chatAreaHolder = document.getElementById('chatAreaHolder');
+    var chatArea = document.getElementById('chatArea');
+    var chatAreaTitle = document.getElementById('chatAreaTitle');
+    var chatAreaBottom = document.getElementById('chatAreaBottom');
+
+    var buffer = 47; // probably only temporary, to deal with margin etc. Also, this is precise (at least for FF)
+
+    var totalHeight = chatAreaHolder.clientHeight;
+    var filledHeight = chatAreaTitle.clientHeight + chatAreaBottom.clientHeight;
+    var remainingHeight = totalHeight - filledHeight - buffer;
+    console.log(totalHeight, filledHeight, remainingHeight)
+
+    chatArea.style.height = remainingHeight + 'px';
+    chatArea.style.maxHeight = remainingHeight + 'px';
+}
+
 function onStartFunctions() {
     setInterval(updateSCM, SCMUpdateFrequency)
     setInterval(updateChat, chatUpdateFrequency);
+
+    serverCommsManager.setSavedUsername();
+
+    fixChatAreaSize();
+    messageInputBox.addEventListener("keydown", function(event) {
+    if (event.keyCode === 13) {
+        serverCommsManager.sendChatMessage();
+    }
+    });
 
     updateSCM();
 }

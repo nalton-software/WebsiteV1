@@ -24,9 +24,11 @@ td {
     vertical-align: top;
 }
 
-table {
+#outerTable {
     border: 2px solid #222222;
     border-collapse: collapse;
+    height: 100%;
+    table-layout: fixed;
 }
 
 #topbar {
@@ -53,10 +55,26 @@ table {
 #chatAreaHolder {
     width: 20vw;
     padding: 5px;
-    position: relative;
+    text-align: center;
 }
 
-.bottomAlign {
-    position: absolute;
-    bottom: 0;
+#chatArea {
+    overflow-y: scroll;
+    border: 1px solid black;
+    padding: 10px;
+    text-align: left;
+    vertical-align: bottom;
+}
+
+#messageInputBox {
+    box-sizing: border-box;
+    display: block;
+    width: 100%;
+    margin-top: 5px;
+    border: 1px inset black;
+    background-color: #FAFAFA;
+}
+
+#sendMessageButton {
+    margin: 5px;
 }

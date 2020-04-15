@@ -2,6 +2,8 @@ const dictionary = {
     userEndProgramName : 'p5Whiteboard',
     chatSystemName : 'p5Whiteboard-Setup',
 
+    LSusernameKey : '!savedUsername',
+
     addMessageUrl : 'scripts/addMessage.php',
     createRoomUrl : 'scripts/createRoom.php',
     joinRoomUrl : 'scripts/joinRoom.php',

@@ -73,7 +73,8 @@ class ServerCommsManager {
         var warningSent = this.handleServerWarning(echoFromServer);
         if (! errorOccured && ! warningSent && echoFromServer === 'success') {
             if (this.username === null) {
-                this.username = prompt(dictionary.usernamePrompt);
+                var username = prompt(dictionary.usernamePrompt);
+                this.setUsername(username);
             }
 
             this.successJoinProtocol();
@@ -107,11 +108,34 @@ class ServerCommsManager {
         }
     }
 
+    setUsername(username) {
+        //if (checkUsername(username)) {
+            this.username = username;
+
+            // save username
+            localStorage.setItem(dictionary.LSusernameKey, username);
+        //}
+    }
+
+    setSavedUsername() {
+        var savedUsername = localStorage.getItem(dictionary.LSusernameKey);
+        if (savedUsername !== null) {
+            this.setUsername(savedUsername);
+        }
+    }
+
     sendChatMessage() {
         if (this.roomId !== null) {
-            var content = prompt(dictionary.messageContentPrompt);
+            var content = messageInputBox.value;
+
+            // ** check content - add in future **
+
+            // send message to server
             var data = `username=${this.username}&content=${content}&roomId=${this.roomId}`;
             this.serverComm.sendDataPhp(dictionary.addMessageUrl, data);
+
+            // clear input box
+            messageInputBox.value = '';
         }
     }
 
