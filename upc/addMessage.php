@@ -36,10 +36,11 @@ else {
 
 function isUsernameValid($username) {
     global $invalidUsernames;
+    $lowerCaseUsername = strtolower($username);
 
     $usernameValid = true;
     for ($i = 0; $i < count($invalidUsernames); $i ++) {
-        if ($username == $invalidUsernames[$i]) {
+        if ($lowerCaseUsername == $invalidUsernames[$i]) {
             $usernameValid = false;
             break;
         }

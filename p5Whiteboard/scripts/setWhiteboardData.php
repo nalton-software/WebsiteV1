@@ -1,13 +1,16 @@
 <?php
 const roomDataFileUrl = "../!roomdata.txt";
 
-$roomname = $_POST["roomname"];
 $roomId = $_POST["roomId"];
+$whiteboardDataStr = $_POST["whiteboardData"];
+$editMadeBy = $_POST["editMadeBy"]; // unused as of now, may be used later on
 
-// (check data - implement in future)
-
-// read file
+// read data from file
 $roomDataStr = file_get_contents(roomDataFileUrl);
+
+if (strlen($roomDataStr) <= 0) {
+    echo "||nonExistentRoom";
+}
 
 // do check for null
 if ($roomDataStr !== null) {
@@ -19,28 +22,29 @@ if ($roomDataStr !== null) {
         $roomData = json_decode($roomDataStr);
     }
 
-    // check if there is another room with that id, don't proceed if there is
-    $roomIdUnique = getRoom($roomData, $roomId) === null;
-    if ($roomIdUnique) {
-        // make room
-        $room = new stdClass();
-        $room->name = $roomname;
-        $room->id = $roomId;
-        $room->whiteboardData = [];
-        $room->chatMessages = [];
+    $room = getRoom($roomData, $roomId);
 
-        // add message to room, stringify data
-        array_push($roomData, $room);
+    // check if room exists
+    if ($room !== null) {
+        // parse the whiteboard data and then put it in the room
+        // this will kill the program is there's a problem with the whiteboard data, so no checks needed
+        $whiteboardData = json_decode($whiteboardDataStr);
+        $room->whiteboardData = $whiteboardData;
+        echo "rd" . json_encode($roomData);
+
+        // encode the room data
         $roomDataStr = json_encode($roomData);
-        // check if json_encode died, put in file
+        echo $roomDataStr;
+        // put in file
         if (strlen($roomDataStr) > 0) {
             file_put_contents(roomDataFileUrl, $roomDataStr);
         }
-        file_put_contents(roomDataFileUrl, $roomDataStr);
-        echo "success";
+        else {
+            echo "**unknownServerError";
+        }
     }
     else {
-        echo "||roomIdDuplicated";
+        echo "||nonExistentRoom";
     }
 }
 else {
@@ -58,4 +62,5 @@ function getRoom($roomData, $roomId) {
     }
     return $room;
 }
+
 ?>

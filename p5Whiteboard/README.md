@@ -36,6 +36,9 @@ The bulk of the program is broken up into a number of JS files, kept in the scri
 - Like errors, but instead of the ** prefix, they have a || prefix
 - Are kept in dictionary.js except that the || prefix is replaced with WARN
 
+#### Vectors/coordinates:
+- These used to be stored as p5 vector objects but it turns out that they are cyclic somehow and that makes FF angry, so I have coded my own (simpler) vector objects called SVector. They have their own methods and there will also be some aux functions to add/divide/sub/mult them without editing them, like the p5.Vector.add(v1, v2)
+
 
 ## Detailed Class Information:
 [Contents](#Contents)
@@ -49,16 +52,14 @@ The bulk of the program is broken up into a number of JS files, kept in the scri
 - Message format object: {sender: "sender", content: "content"}
 
 #### Whiteboard/Shape classes:
-- relies on global roomId
-- this class handles shape objects to create a finished product
+- Whiteboard class handles shape objects to create a finished product
 - it doesn't set its own params (pensize, color) - the managing function/object needs to set those
 - each shape is a collection of points that have lines drawn between them
 - if two points are over a certain distance (this.maxPointDist), then extra points are put in between to make the eraser not miss them
-- That's all I have time for
-- in other classes it says this is not interactive, fix this when it is
+- In interactive mode, this class gets fed the shapes to draw
 
 #### ServerCommsManager class:
-- This class knows the inns and outs of the php scripts that are on the server
+- This class knows the ins and outs of the php scripts that are on the server
 - It has a few methods that will probably be moved in future, these are used by chatDrawer (and whiteboard in future) that call php to download message data. They don't manipulate or change it, and they don't send any of it back up (so it's secure)
 - Don't get it confused with ServerCommunicator, which only calls the scripts
 
@@ -77,6 +78,13 @@ The bulk of the program is broken up into a number of JS files, kept in the scri
 2. You were at the bottom and a new message came: scroll to new bototm
 3. (default) You were not at the bottom and a new message came / a new message didn't come: scroll back to were you were before the new message was drawn
 - I think this works, but I'm not sure as I haven't had a chance to test it thoroughly with two computers - only two tabs
+
+#### WhiteboardSyncer class:
+- Syncs the whiteboardData on the server to the whiteboard on the computer
+- Knows the ins and outs of serverCommsManager.js and whiteboard.js
+- Links the affromented classes together
+- Quite small and barely deserves a class, but can't be fitted into any of the other classes and is wouldn't be good in the main (no class) JS file - p5Whiteboard.js
+- Needs lots of work - the sync kills computers, makes things disappear, reappear, etc
 
 
 ## Php Script Information:
@@ -108,3 +116,9 @@ The bulk of the program is broken up into a number of JS files, kept in the scri
 - Takes params 'roomId'
 - Finds the room with roomId and then echoes a stringified version of the messages in that room
 - Used so far by chatDrawer.js, through serverCommsManager
+
+#### getWhiteboardData.php
+- Call using AJAX POST method
+- Takes params 'roomId'
+- Finds the room with roomId and then echoes a stringified version of the whiteboardData belonging to that room
+- Used for the first part of editing whiteboard data

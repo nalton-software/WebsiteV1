@@ -39,8 +39,8 @@ class ServerCommsManager {
     }
 
     createEmptyRoom() {
-        var roomname = prompt('Enter room name:');
-        this.creatingRoomId = prompt('Enter room id:'); // only temporary
+        var roomname = prompt(dictionary.roomNamePrompt);
+        this.creatingRoomId = prompt(dictionary.roomIdPrompt); // having to invent your own room Id is only temporary
         var data = `roomname=${roomname}&roomId=${this.creatingRoomId}`;
         this.serverComm.sendDataPhpEcho(dictionary.createRoomUrl, data, this.createEmptyRoomEnd.bind(this));
     }
@@ -82,6 +82,7 @@ class ServerCommsManager {
         else if (warningSent) {
             var warningBody = this.getWarningBody(echoFromServer);
             var dictionaryKey = dictionary.jsWarningPrefix + warningBody;
+            console.warn('warning:' + dictionaryKey);
             alert(dictionary[dictionaryKey]);
         }
     }
@@ -137,6 +138,17 @@ class ServerCommsManager {
             // clear input box
             messageInputBox.value = '';
         }
+    }
+
+    downloadWhiteboardData(callbackFunction, callbackFunctionArg) {
+        var data = `roomId=${this.roomId}`;
+        this.serverComm.sendDataPhpEcho(dictionary.readWhiteboardDataUrl, data,
+        callbackFunction, callbackFunctionArg);
+    }
+
+    sendWhiteboardData(whiteboardDataStr, callbackFunction, callbackFunctionArg) {
+        var data = `roomId=${this.roomId}&whiteboardData=${whiteboardDataStr}&editMadeBy=${this.username}`;
+        this.serverComm.sendDataPhpEcho(dictionary.sendWhiteboardDataUrl, data, callbackFunction, callbackFunctionArg);
     }
 
     updateTopBar() {

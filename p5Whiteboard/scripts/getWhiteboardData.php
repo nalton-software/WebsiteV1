@@ -3,14 +3,19 @@ const roomDataFileUrl = "../!roomdata.txt";
 
 $roomId = $_POST["roomId"];
 
+// read data from file
 $roomDataStr = file_get_contents(roomDataFileUrl);
+
 if ($roomDataStr !== null) {
+    // parse data, find room    
     $roomData = json_decode($roomDataStr);
     $room = getRoom($roomData, $roomId);
-    
+
+    // check if room exists
     if ($room !== null) {
-        $roomname = $room->name;
-        echo $roomname;
+        // get whiteboardData and send it back
+        $whiteboardData = $room->whiteboardData;
+        echo json_encode($whiteboardData);
     }
     else {
         echo "||nonExistentRoom";
@@ -31,4 +36,5 @@ function getRoom($roomData, $roomId) {
     }
     return $room;
 }
+
 ?>

@@ -11,10 +11,16 @@ $roomId = $_POST["roomId"];
 // read file
 $roomDataStr = file_get_contents(roomDataFileUrl);
 
-// do checks for null, empty file
-if (strlen($roomDataStr) > 0 && $roomDataStr !== null) {
-    // parse data, get room
-    $roomData = json_decode($roomDataStr);
+// do check for null
+if ($roomDataStr !== null) {
+    // if data file is empty, then just make empty array for data instead of reading file
+    if (strlen($roomDataStr) <= 0) {
+        $roomData = [];
+    }
+    else { // otherwise parse data
+        $roomData = json_decode($roomDataStr);
+    }
+
     $room = getRoom($roomData, $roomId);
 
     // check if room was found
@@ -24,10 +30,13 @@ if (strlen($roomDataStr) > 0 && $roomDataStr !== null) {
         $message->sender = $username;
         $message->content = $content;
 
-        // add message to room, put in file
+        // add message to room, stringify
         array_push($room->chatMessages, $message);
         $roomDataStr = json_encode($roomData);
-        file_put_contents(roomDataFileUrl, $roomDataStr);
+        // check if json_encode died, put in file
+        if (strlen($roomDataStr) > 0) {
+            file_put_contents(roomDataFileUrl, $roomDataStr);
+        }
     }
     else {
         echo "||nonExistentRoom";

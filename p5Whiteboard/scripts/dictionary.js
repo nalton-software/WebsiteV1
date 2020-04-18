@@ -5,11 +5,15 @@ const dictionary = {
     LSusernameKey : '!savedUsername',
 
     addMessageUrl : 'scripts/addMessage.php',
+    getMessagesUrl : 'scripts/getMessages.php',
     createRoomUrl : 'scripts/createRoom.php',
     joinRoomUrl : 'scripts/joinRoom.php',
     getRoomNameUrl : 'scripts/getRoomName.php',
-    getMessagesUrl : 'scripts/getMessages.php',
+    sendWhiteboardDataUrl : 'scripts/setWhiteboardData.php',
+    readWhiteboardDataUrl : 'scripts/getWhiteboardData.php',
 
+    roomNamePrompt : 'Enter room name:',
+    roomIdPrompt : 'Enter room ID:',
     messageContentPrompt : 'Enter message content:',
     usernamePrompt : 'Enter a username to continue:',
     notInRoomText : 'You are not currently in a room',
@@ -18,6 +22,7 @@ const dictionary = {
     jsErrorPrefix : 'ERROR',
     ERRORroomFileEmpty : 'The data file seems to be empty!',
     ERRORroomNotFound : 'I can\'t find that room!',
+    ERRORunknownServerError : 'Critical internal failure: problem on server',
 
     serverWarningPrefix : '||',
     jsWarningPrefix : 'WARN',
@@ -27,5 +32,3 @@ const dictionary = {
     WARNroomIdDuplicated : 'That room ID already exists',
     WARNnotInRoom : 'You are not in a room currently'
 };
-// get is a bit weird but it works like the below code looks like it should work (but this doesn't work)
-// foo = {a : 1, b : 2, c : this.a + this.b}

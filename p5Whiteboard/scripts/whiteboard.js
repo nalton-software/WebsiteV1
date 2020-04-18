@@ -85,18 +85,18 @@ class Whiteboard {
     }
 
     addPoint(x, y, shape) {
-        var currentPoint = createVector(x, y);
+        var currentPoint = new SVector(x, y);
         var prevPoint = shape.points[shape.points.length - 1];
         var dist = prevPoint.dist(currentPoint);
         if (dist > this.maxPointDist) {
             // find points needed to fill space
             var pointsNeeded = Math.floor(prevPoint.dist(currentPoint) / this.maxPointDist) + 1;
-            var distVector = p5.Vector.sub(currentPoint, prevPoint);
-            var incrementAmount = p5.Vector.div(distVector, pointsNeeded);
+            var distVector = subVectors(currentPoint, prevPoint);
+            var incrementAmount = divVector(distVector, pointsNeeded);
             
             for (var i = 1; i < pointsNeeded; i ++) {
-                var offset = p5.Vector.mult(incrementAmount, i);
-                var pointPos = p5.Vector.add(prevPoint, offset)
+                var offset = multVector(incrementAmount, i);
+                var pointPos = addVectors(prevPoint, offset)
                 shape.points.push(pointPos);
             }
         }
@@ -133,7 +133,7 @@ class Whiteboard {
     // this uses a copy of shapelist so that it doesn't change the real one until all of the close points have been changed
     // if it didn't, the main loop would go on forever as the shapeList would keep increasing length
     eraseClosePoints(x, y) {
-        var erasePoint = createVector(x, y);
+        var erasePoint = new SVector(x, y);
         var newShapeList = [];
 
         for (var shapeNum = 0; shapeNum < this.shapeList.length; shapeNum ++) {
@@ -141,7 +141,7 @@ class Whiteboard {
             var deletePointIndex = null;
             for (var pointNum = 0; pointNum < currentShape.points.length; pointNum ++) {
                 var currentPoint = currentShape.points[pointNum];
-                var dist = currentPoint.dist(erasePoint);
+                var dist = distBetweenVectors(currentPoint, erasePoint);
                 
                 if (dist < this.eraserRadius) {
                     deletePointIndex = pointNum;

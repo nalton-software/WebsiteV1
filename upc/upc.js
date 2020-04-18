@@ -12,7 +12,9 @@ var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 // these are all lowercase as the username is converted to lowercase before being checked
 // the checking is also done in php, but it doesn't return error message to user...
 // if they accidentally do it, so this is still here
-const bannedUsernames = ['status', 'upc-setup', 'warn', 'error', 'server', 'james bond', 'upcsetup', 'upc setup'];
+// these are in weird format because I copied from a JSON.stringify output
+const bannedUsernames = ['status','warn','error','server','james bond','james-bond','jamesbond',
+'james_bond','james.bond','upc-setup','upcsetup','upc setup','delete','virus','bug', 'yeet', 'yoink', 'yate'];
 const bannedChars = [];
 
 var lastInfoDownload = '';
@@ -91,7 +93,7 @@ function sendMessage(username, content) {
         }
     }
     xmlhttp.open('POST', 'addMessage.php', true);
-    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     xmlhttp.send('username=' + username + '&content=' + content);
 }
 
@@ -188,7 +190,7 @@ function userClearChat() {
 function clearChat() {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open('POST', 'clearTxt.php', true);
-    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     xmlhttp.send('txtFile=upctxt.txt');
 
     sendMessage(setupMessage.username, setupMessage.content);
@@ -198,7 +200,7 @@ function onLoadSetup() {
     sendMessage(loadMessage.username, loadMessage.content);
 }
 
-inputField.addEventListener("keyup", function(event) {
+inputField.addEventListener('keyup', function(event) {
     if (event.keyCode === 13) {
         event.preventDefault();
         submit();

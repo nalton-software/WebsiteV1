@@ -9,8 +9,12 @@ $roomId = $_POST["roomId"];
 // read file
 $roomDataStr = file_get_contents(roomDataFileUrl);
 
+if (strlen($roomDataStr) <= 0) {
+    echo "||nonExistentRoom";
+}
+
 // do checks for null, empty file
-if (strlen($roomDataStr) > 0 && $roomDataStr !== null) {
+if ($roomDataStr !== null) {
     // parse data, get room
     $roomData = json_decode($roomDataStr);
     $room = getRoom($roomData, $roomId);

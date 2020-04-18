@@ -13,10 +13,15 @@ const bgColor = 100;
 
 const whiteboard = new Whiteboard();
 const serverCommsManager = new ServerCommsManager('roomDataShower');
+const whiteboardSyncer = new WhiteboardSyncer(whiteboard, serverCommsManager);
 const chatDrawer = new ChatDrawer('chatArea');
 
+// all in ms
 const SCMUpdateFrequency = 2000;
-const chatUpdateFrequency = 1000; // in ms
+const whiteboardSyncFrequency = 500;
+const chatUpdateFrequency = 1000;
+
+const debug_nosync = confirm('Debug: cancel whiteboard syncing?')
 
 function setup() {
     canvas = createCanvas(width, height);
@@ -121,6 +126,12 @@ function updateSCM() {
     serverCommsManager.updateTopBar();
 }
 
+function syncWhiteboard() {
+    if (serverCommsManager.isInRoom() && ! debug_nosync) {
+        serverCommsManager.downloadWhiteboardData(whiteboardSyncer.syncWhiteboardToServer.bind(whiteboardSyncer));
+    }
+}
+
 function fixChatAreaSize() {
     var chatAreaHolder = document.getElementById('chatAreaHolder');
     var chatArea = document.getElementById('chatArea');
@@ -132,14 +143,14 @@ function fixChatAreaSize() {
     var totalHeight = chatAreaHolder.clientHeight;
     var filledHeight = chatAreaTitle.clientHeight + chatAreaBottom.clientHeight;
     var remainingHeight = totalHeight - filledHeight - buffer;
-    console.log(totalHeight, filledHeight, remainingHeight)
 
     chatArea.style.height = remainingHeight + 'px';
     chatArea.style.maxHeight = remainingHeight + 'px';
 }
 
 function onStartFunctions() {
-    setInterval(updateSCM, SCMUpdateFrequency)
+    setInterval(updateSCM, SCMUpdateFrequency);
+    setInterval(syncWhiteboard, whiteboardSyncFrequency);
     setInterval(updateChat, chatUpdateFrequency);
 
     serverCommsManager.setSavedUsername();
@@ -156,7 +167,6 @@ function onStartFunctions() {
 
 function draw() { 
     background(bgColor);
-    //drawBorders();
 
     whiteboard.update(getColor(), getPenSize(), getEraserOn());
 }
