@@ -13,21 +13,25 @@ function toggleSidebar() {
     table.style.transform = `translateX(-${sidebarHolder.offsetWidth}px)`; // smooth movement
     sidebarVisible = false;
 
-    var viewportWidth = document.body.clientWidth;
-    table.style.width = viewportWidth + sidebar.clientWidth + 'px';
-    mainCell.style.maxWidth = viewportWidth + 'px';
-    mainCell.style.width = viewportWidth + 'px';
-    sidebarButton.innerHTML = 'Show all pages';
+    setTimeout(function() {
+      var viewportWidth = document.body.clientWidth;
+      table.style.width = viewportWidth + sidebar.clientWidth + 'px';
+      mainCell.style.maxWidth = viewportWidth + 'px';
+      mainCell.style.width = viewportWidth + 'px';
+      sidebarButton.innerHTML = 'Show all pages';
+    }, 500);
   }
   else { // show
     table.style.transform = 'translateX(0px)';
     sidebarVisible = true;
 
-    var viewportWidth = document.body.clientWidth;
-    table.style.width = viewportWidth + 'px';
-    mainCell.style.maxWidth = viewportWidth - sidebar.clientWidth + 'px';
-    mainCell.style.width = viewportWidth - sidebar.clientWidth + 'px';
-    sidebarButton.innerHTML = 'Hide all pages';
+    setTimeout(function() {
+      var viewportWidth = document.body.clientWidth;
+      table.style.width = viewportWidth + 'px';
+      mainCell.style.maxWidth = viewportWidth - sidebar.clientWidth + 'px';
+      mainCell.style.width = viewportWidth - sidebar.clientWidth + 'px';
+      sidebarButton.innerHTML = 'Hide all pages';
+    }, 500);
   }
 }
 

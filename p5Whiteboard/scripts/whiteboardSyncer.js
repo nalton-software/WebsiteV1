@@ -29,21 +29,27 @@ class WhiteboardSyncer {
             
             // if something changed somewhere
             if (localWhiteboardDataStr !== whiteboardDataStr) {
-                // if nothing has changed on this whiteboard since last upload (if something changed on the server)
-                if (localWhiteboardDataStr === this.lastWhiteboardUpload) {
+                // if the last download is not the same as this download (if something changed on server)
+                if (whiteboardDataStr !== this.lastWhiteboardDownload) {
                     // set the whiteboard to the downloaded data
                     var whiteboardData = JSON.parse(whiteboardDataStr);
                     this.whiteboardLink.shapeList = whiteboardData;
+                    this.lastWhiteboardDownload = whiteboardDataStr;
                 }
+
                 // if something changed here since it was last sent
                 else if (localWhiteboardData !== this.lastWhiteboardUpload) {
                     // send the current whiteboard data up
                     this.serverCommsManagerLink.sendWhiteboardData(
                         localWhiteboardDataStr, this.successfulEditProtocol.bind(this));
                     this.lastWhiteboardUpload = localWhiteboardDataStr
+                    this.lastWhiteboardDownload = localWhiteboardDataStr
+                }
+
+                else {
+                    this.lastWhiteboardDownload = whiteboardDataStr;
                 }
             }
-            this.lastWhiteboardDownload = whiteboardDataStr;
         }
     }
 

@@ -1,1 +1,4 @@
-["status","warn","error","server","james bond","james-bond","jamesbond","james_bond","james.bond","upc-setup","upcsetup","upc setup","delete","virus","bug", "yeet", "yoink", "yate"]
+["status","warn","error","server","james bond","james-bond","jamesbond","james_bond","james.bond","James H Bond",
+"upc-setup","upcsetup","upc setup","delete","virus","bug", "yeet", "yoink", "yate","server","console","computer",
+"system", "warning", "fatal error", "fatalerror", "fatal_error", "fatal.error", "fatal-error", "website",
+"web site","log","crash","servercrash","server crash","server-crash", "server_crash"]

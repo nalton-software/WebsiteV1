@@ -24,6 +24,10 @@ if (isUsernameValid($username)) {
         $messageList = [];
     }
 
+    if ($messageList === null) {
+        $messageList = [];
+    }
+
     // add message, encode, and update file
     array_push($messageList, $message);
     $messageListStr = json_encode($messageList);

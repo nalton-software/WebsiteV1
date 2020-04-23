@@ -1,5 +1,4 @@
 Homepage&/homepage*
-Example Project&/exampleProject*
 Sandy Editor&/sandyEditor*
 Minesweeper&/minesweeper*
 Unnamed Prototype Chat&/upc*

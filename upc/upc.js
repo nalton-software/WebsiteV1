@@ -1,6 +1,3 @@
-const setupMessage = {'username' : 'UPC-SETUP', 'content' : 'Welcome to Unnamed Protoype chat'};
-const loadMessage = {'username' : 'UPC-SETUP', 'content' : 'A new user has joined the chat'};
-
 const inputField = document.getElementById('inputField');
 const nameField = document.getElementById('nameField');
 const resultBox = document.getElementById('resultBox');
@@ -189,15 +186,16 @@ function userClearChat() {
 
 function clearChat() {
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open('POST', 'clearTxt.php', true);
+    xmlhttp.open('POST', 'clearChat.php', true);
     xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    xmlhttp.send('txtFile=upctxt.txt');
-
-    sendMessage(setupMessage.username, setupMessage.content);
+    xmlhttp.send();
 }
 
 function onLoadSetup() {
-    sendMessage(loadMessage.username, loadMessage.content);
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.open('POST', 'addNewUserMessage.php', true);
+    xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    xmlhttp.send();
 }
 
 inputField.addEventListener('keyup', function(event) {

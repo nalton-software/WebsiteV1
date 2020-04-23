@@ -88,6 +88,7 @@ class ServerCommsManager {
     }
 
     successJoinProtocol() {
+        whiteboard.clear() // I'm sorry but I couldn't find a access routine to do this
         this.roomId = this.joiningRoomId;
 
         // find name of room that has been joined
