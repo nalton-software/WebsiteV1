@@ -1,1 +1,0 @@
-{"username":"UPC-SETUP","content":"Welcome to Unnamed Protoype chat"}|{"username":"UPC-SETUP","content":"A new user has joined the chat"}|{"username":"STATUS","content":"database deleted successfully"}|{"username":"STATUS","content":"deleting in 1 hour"}

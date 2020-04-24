@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Chat | Accounts Chat</title>
+    <link href="/normalStyle.css" rel="stylesheet" type="text/css">
+    <link href="accountsChat.css" rel="stylesheet" type="text/css">
+    <link href="/favicon.png" rel="icon">
+</head>
+
+<body>
+    <div class="topbar" id="topbar">
+    <h1>Nalton Software</h1>
+    <button onclick="toggleSidebar()" id="sidebarButton">Hide all pages</button>
+    </div>
+
+    <table class="mainLayoutTable" id="mainLayoutTable">
+    <tr>
+        <td class="sidebarHolder" id="sidebarHolder">
+        <div class="sidebar" id="sidebar">
+
+        </div>
+        </td>
+
+        <td class="main" id="mainCell">
+        <p class="pageTitle">Accounts Chat</p>
+        <br>
+        
+
+        <div id="resultBox" style="overflow-y:scroll; height:50vh;"></div>
+        <input id="inputField">
+        <button onclick="submit()">Write!</button>
+        <button onclick="">Clear chat</button>
+        </td>
+    </tr>
+    </table>
+</body>
+
+<script src="/normalFunctions.js"></script>
+</html>

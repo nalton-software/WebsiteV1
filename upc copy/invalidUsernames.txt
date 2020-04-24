@@ -1,1 +1,0 @@
-["status","warn","error","server","james bond","james-bond","jamesbond","james_bond","james.bond","upc-setup","upcsetup","upc setup","delete","virus","bug", "yeet", "yoink", "yate"]
