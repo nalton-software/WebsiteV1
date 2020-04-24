@@ -2,4 +2,5 @@ Homepage&/homepage*
 Sandy Editor&/sandyEditor*
 Minesweeper&/minesweeper*
 Unnamed Prototype Chat&/upc*
-P5 Whiteboard&/p5Whiteboard
+P5 Whiteboard&/p5Whiteboard*
+Chat Box&/chatbox
