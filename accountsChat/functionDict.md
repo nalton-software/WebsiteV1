@@ -1,15 +1,19 @@
-## All of the js functions in this program
+## All of the JS and PHP functions in this program
 
 #### So that it's easy to see where I'm at
 
-#### a function's id is called fID
+#### a JS function's id is called fID eg: fID 7
+
+## A PHP script's id is called PS (php script) eg: PS 0. Also known in format p0
+
+#### a PHP function's id is called PUN (php utility number) eg: PUN 1. Also known in format PU.1
 
 <html>
 <!-- use html to make a table -->
 <table>
     <b>
     <tr>
-    <td> fID </td><td> Name </td><td> Purpose </td><td> AKA </td><td> status </td>
+    <td> fID / PUN </td><td> Name </td><td> Purpose </td><td> AKA </td><td> status </td>
     <tr>
     </b>
 <!-- empty line -->
@@ -127,5 +131,37 @@
 <!-- empty line -->
     <tr>
     <td> 29 </td><td> getElemById(id) </td><td> shorthand for document.getElementById() </td><td> </td><td> written </td>
+    <tr>
+<!-- empty line -->
+    <tr>
+    <td> PS 0 </td><td> attemptLogin[username, password] </td><td> check if the password matches the username </td><td> </td><td> written </td>
+    <tr>
+<!-- empty line -->
+    <tr>
+    <td> PS 1 </td><td> newAccount[username, password] </td><td> create a new account if username is unique. Returns 'success', 'WARNINGpwDuplicated', or error messages </td><td> </td><td> written </td>
+    <tr>
+<!-- empty line -->
+    <tr>
+    <td> PS 2 </td><td> addMessage[content, username, password] </td><td> checks password, then if it is correct add a message. Returns success or warning or error messages </td><td> </td><td> written </td>
+    <tr>
+<!-- empty line -->
+    <tr>
+    <td> PS 3 </td><td> getMessages.php[username, password] </td><td> checks password, then if it is correct return the messages </td><td> </td><td> written </td>
+    <tr>
+<!-- empty line -->
+    <tr>
+    <td> PUN 1 </td><td> checkPassword(username, password, userList) </td><td> check if the password for the user with the name <i>username</i> has the password <i>password</i> by looking at the userList. Returns 'success', 'WARNINGpwIncorrect', 'WARNINGnonExistingUsername', or error messages </td><td> getUser, login attempt </td><td> written </td>
+    <tr>
+<!-- empty line -->
+    <tr>
+    <td> PUN 2 </td><td> findUserObj(username, userList) </td><td> return a ptr to the user obj in userList that matches username. Returns null if not found </td><td> </td><td> written </td>
+    <tr>
+<!-- empty line -->
+    <tr>
+    <td> PUN 3 </td><td> filePutContentsChecks(pathToFile, contents) </td><td> check if the contents are not null then put in file </td><td> </td><td> written </td>
+    <tr>
+<!-- empty line -->
+    <tr>
+    <td> PUN 4 </td><td> addMessageAndSave(sender, content) </td><td> assumes that file opened alright and that user verified. Adds message to the file, return true if success, false if failed </td><td> </td><td> written </td>
     <tr>
 </html>

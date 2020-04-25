@@ -25,7 +25,10 @@
 
         <td class="main" id="mainCell">
             <p class="pageTitle">Accounts Chat Login</p>
-            
+            <input id="usernameInput" placeholder="username">
+            <input id="passwordInput" type="password">
+            <button onclick="sendLoginRequest()">Login</button>
+            <button onclick="goToCreateAccountPage()">Create account</button>
         </td>
         
         </tr>
@@ -33,5 +36,8 @@
     </body>
 
     <script src="/normalFunctions.js"></script>
+    <script src="utilScripts.js"></script>
+    <script src="serverCommScripts.js"></script>
+    <script src="globalConstants.js"></script>
     <script src="loginPageScripts.js"></script>
 </html>

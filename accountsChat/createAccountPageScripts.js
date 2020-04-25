@@ -1,7 +1,4 @@
-// requires utilScripts.js, serverCommScripts.js and globalConstants.js
-
-const usernameBarId = 'usernameInput';
-const passwordBarId = 'passwordInput';
+// requires utilScripts.js, serverCommScripts.js loginPageScripts.js and globalConstants.js
 
 function sendCreateAccountRequest() {
     // fID 8
@@ -23,6 +20,10 @@ function useCreateAccountResponse(serverResponse) {
     
     // if no errors and no warnings, try and login then go to chat page
     if (! serverErrorFound && ! serverWarningFound) {
+        // read input fields
+        var username = readInputBar(usernameBarId);
+        var password = readInputBar(passwordBarId);
+
         var data = `username=${username}&password=${password}`;
         sendDataPhpEcho(phpUrls.loginAttempt, data, useLoginRequestResponse);
     }

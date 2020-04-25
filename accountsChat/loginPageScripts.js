@@ -1,8 +1,5 @@
 // requires utilScripts.js, serverCommScripts.js and globalConstants.js
 
-const usernameBarId = 'usernameInput';
-const passwordBarId = 'passwordInput';
-
 function sendLoginRequest() {
     // fID 1
     //  read input fields

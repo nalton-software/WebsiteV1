@@ -1,5 +1,6 @@
 Homepage&/homepage*
 Sandy Editor&/sandyEditor*
 Minesweeper&/minesweeper*
+Accounts Chat&/accountsChat*
 Unnamed Prototype Chat&/upc*
 P5 Whiteboard&/p5Whiteboard

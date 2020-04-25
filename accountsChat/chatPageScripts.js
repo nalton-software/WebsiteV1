@@ -1,7 +1,10 @@
 // requires utilScripts.js, serverCommScripts.js and globalConstants.js
 const chatStatusBarId = 'chatStatusBar';
-const messageInputBarId = ''; // FIXME
-const displayDivId = ''; // FIXME
+const messageInputBarId = 'messageInputField';
+const displayDivId = 'chatArea';
+
+const downloadInterval = 1000;
+var cachedMessages = '';
 
 const chatStatusBarValues = {
     sending : 'sending',
@@ -23,7 +26,7 @@ function sendMessage() {
 
     // combine message/username/password and send
     var data = `content=${content}&username=${username}&password=${password}`;
-    sendDataPhpEcho(phpUrls.addMessage, data, fid14);
+    sendDataPhpEcho(phpUrls.addMessage, data, useSendMessageResponse);
 
     // make little text say 'sending'
     setChatStatusBar(chatStatusBarValues.sending);
@@ -39,6 +42,8 @@ function useSendMessageResponse(serverResponse) {
     if (! serverErrorFound && ! serverWarningFound) {
         // set little text to 'sent'
         setChatStatusBar(chatStatusBarValues.messageSent);
+        // clear input bar
+        getElemIdById(messageInputBarId).value = '';
     }
 
     // handle errors and warnings
@@ -87,8 +92,14 @@ function useJoinMessageReponse(serverResponse) {
 
 function downloadMessages() {
     // fID 26
+
+    // read username and password from sessionStorage
+    var username = sessionStorage.getItem('ACloggedInUsername');
+    var password = sessionStorage.getItem('ACloggedInPassword');
+
     // send a request to server to get messages
-    callPhpEcho(phpUrls.getMessages, drawMessages);
+    var data = `username=${username}&password=${password}`;
+    sendDataPhpEcho(phpUrls.getMessages, data, drawMessages);
 }
 
 function drawMessages(serverResponse) {
@@ -102,21 +113,26 @@ function drawMessages(serverResponse) {
     if (! serverErrorFound && ! serverWarningFound) {
         // if new messages, continue drawing
         if (serverResponse !== cachedMessages) {
-            // parse response and get last n messages to avoid drawing lots
+            // parse response
             var fullMessageList = JSON.parse(serverResponse);  
-            var clippedMessageList = fullMessageList.slice(messageDrawLimit);
+            
+            // if the list is too long, clip it
+            if (fullMessageList.length > messageDrawLimit) {
+                fullMessageList = fullMessageList.slice(messageDrawLimit);
+            }
 
             // create empty string to put all messages into
             var stringToWrite = '';
 
             // format each message and put together:
-            for (var msgIdx = 0; msgIdx < clippedMessageList.length; msgIdx ++) {
-                var currMessage = clippedMessageList[msgIdx];
+            for (var msgIdx = 0; msgIdx < fullMessageList.length; msgIdx ++) {
+                var currMessage = fullMessageList[msgIdx];
                 var currLine = currMessage.sender + ' : ' + currMessage.content + '\n';
                 stringToWrite += currLine;
             }
             // put in display div
             getElemIdById(displayDivId).innerText = stringToWrite;
+            cachedMessages = serverResponse;
         }
         // else do nothing - keep already-drawn messages
     }
@@ -129,3 +145,13 @@ function drawMessages(serverResponse) {
         handleWarning(serverResponse);
     }
 }
+
+// set up enter key to send
+getElemIdById(messageInputBarId).addEventListener('keyup', function(event) {
+    if (event.keyCode === 13) {
+        event.preventDefault();
+        sendMessage();
+    }
+});
+
+setInterval(downloadMessages, downloadInterval);

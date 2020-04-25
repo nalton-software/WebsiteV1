@@ -28,9 +28,10 @@
         <br>
         
 
-        <div id="resultBox" style="overflow-y:scroll; height:50vh;"></div>
-        <input id="inputField">
-        <button onclick="submit()">Write!</button>
+        <div id="chatArea" style="overflow-y:scroll; height:50vh;"></div>
+        <p id="chatStatusBar"></p>
+        <input id="messageInputField">
+        <button onclick="sendMessage()">Write!</button>
         <button onclick="">Clear chat</button>
         </td>
     </tr>
@@ -38,4 +39,8 @@
 </body>
 
 <script src="/normalFunctions.js"></script>
+<script src="utilScripts.js"></script>
+<script src="serverCommScripts.js"></script>
+<script src="globalConstants.js"></script>
+<script src="chatPageScripts.js"></script>
 </html>

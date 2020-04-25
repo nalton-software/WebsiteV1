@@ -1,5 +1,9 @@
 // this script requires globalConstants.js
 
+// generic id's that must be used
+const usernameBarId = 'usernameInput';
+const passwordBarId = 'passwordInput';
+
 function goToPage(url) {
     // fID 9
     window.location.href = url;
@@ -64,7 +68,7 @@ function handleError(fullErrorCode) {
 
     // if error type not found, set it to unknown
     if (errorMessage === undefined) {
-        errorMessage = errorDict.unknownError;
+        errorMessage = errorDict['unknownError'];
     }
 
     console.error('ERROR  type: ' + fullErrorCode + ', message: ' + errorMessage);
