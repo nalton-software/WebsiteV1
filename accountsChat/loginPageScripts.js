@@ -39,7 +39,10 @@ function useLoginRequestResponse(serverResponse) {
     }
 }
 
-function goToCreateAccountPage() {
-    // fID 7
-    goToPage(createAccountPageUrl);
-}
+// set up enter key to send
+getElemIdById(passwordBarId).addEventListener('keyup', function(event) {
+    if (event.keyCode === 13) {
+        event.preventDefault();
+        sendLoginRequest();
+    }
+});

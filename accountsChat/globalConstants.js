@@ -4,6 +4,12 @@ const warningPrefix = 'WARNING';
 const localStorageErrorLog = 'ACerrorLog';
 const errorSepInLog = '  -  ';
 
+const userEndSystemName = 'AC-Setup';
+
+// generic id's that must be used
+const usernameBarId = 'usernameInput';
+const passwordBarId = 'passwordInput';
+
 const phpUrls = {
     loginAttempt    : 'loginAttempt.php',
     createAccount   : 'createAccount.php',
@@ -12,7 +18,7 @@ const phpUrls = {
     getMessages     : 'getMessages.php'
 }
 
-// relative to any of the html pages
+// url is relative to any of the html pages
 const chatPageUrl           = 'chatPage.html';
 const loginPageUrl          = 'index.html';
 const createAccountPageUrl  = 'createAccountPage.html';
@@ -31,5 +37,5 @@ const warningDict = {
     'WARNINGpwIncorrect' : () => alert('Password incorrect'),
     'WARNINGnonExistingUsername' : () => alert('Username incorrect'),
     'WARNINGusernameNotUnique' : () => alert('Username already exists'),
-    'WARNINGincorrectPwInChat' : () => alert('sheesh, you naughty person! You tried scamming your way in!')
+    'WARNINGincorrectPwInChat' : WARNINGincorrectPwInChat
 }

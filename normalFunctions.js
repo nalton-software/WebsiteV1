@@ -7,9 +7,10 @@ const sidebarButton = document.getElementById('sidebarButton');
 
 let sidebarVisible = true;
 
-function toggleSidebar() {
+function toggleSidebar(overrideToVisible=false) {
+  // the override is needed in the first adjustment
   resizeSidebar();
-  if (sidebarVisible) { // hide
+  if (sidebarVisible && ! overrideToVisible) { // hide
     table.style.transform = `translateX(-${sidebarHolder.offsetWidth}px)`; // smooth movement
     sidebarVisible = false;
 
@@ -21,7 +22,7 @@ function toggleSidebar() {
       sidebarButton.innerHTML = 'Show all pages';
     }, 500);
   }
-  else { // show
+  else if (! sidebarVisible || overrideToVisible) { // show
     table.style.transform = 'translateX(0px)';
     sidebarVisible = true;
 
@@ -91,7 +92,9 @@ setTimeout(() => {
   resizeSidebar();
 }, 1);
 
-setTimeout(resizeSidebar, 2); // in case the page is slow to load content (especially if created dynamically)
-
 makeLinks();
 resizeSidebar();
+setTimeout(resizeSidebar, 500); // in case the page is slow to load content (especially if created dynamically)
+toggleSidebar(true);
+setTimeout(() => toggleSidebar(true), 100);
+setTimeout(() => toggleSidebar(true), 500);

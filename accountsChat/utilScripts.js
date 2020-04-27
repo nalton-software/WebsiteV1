@@ -1,9 +1,5 @@
 // this script requires globalConstants.js
 
-// generic id's that must be used
-const usernameBarId = 'usernameInput';
-const passwordBarId = 'passwordInput';
-
 function goToPage(url) {
     // fID 9
     window.location.href = url;
@@ -108,4 +104,19 @@ function readInputBar(inputId) {
 function getElemIdById(id) {
     // fID 29
     return document.getElementById(id);
+}
+
+function goToCreateAccountPage() {
+    // fID 7
+    goToPage(createAccountPageUrl);
+}
+
+function goToLoginPage() {
+    // fID 37
+    goToPage(loginPageUrl);
+}
+
+function WARNINGincorrectPwInChat() {
+    alert('Login required: press ok to go to login page');
+    goToLoginPage();
 }

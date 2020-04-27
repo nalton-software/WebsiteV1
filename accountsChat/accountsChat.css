@@ -6,6 +6,35 @@
     padding: 10px;
 }
 
+#loginArea {
+    text-align: center;
+    border: 2px solid black;
+    width: 10px; /* sqeeze it to the size of its contents */
+    padding: 10px;
+    display: table;
+    margin: 0 auto;
+    margin-top: 50px;
+    vertical-align: middle;
+}
+
+#loginArea button {
+    background-color: #27B133;
+    font-size: 15px;
+    display: inline-block;
+    padding: 5px;
+    border: 1px solid black;
+}
+
+#usernameInput, #passwordInput {
+    margin: 5px;
+    min-width: 500px;
+    font-size: 20px;
+}
+
+#chatStatusBar {
+    font-size: 15px;
+}
+
 #inputField {
     width: 250px;
 }

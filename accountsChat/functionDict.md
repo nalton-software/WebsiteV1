@@ -4,9 +4,11 @@
 
 #### a JS function's id is called fID eg: fID 7
 
-## A PHP script's id is called PS (php script) eg: PS 0. Also known in format p0
+#### A PHP script's id is called PS (php script) eg: PS 0. Also known in format p0
 
 #### a PHP function's id is called PUN (php utility number) eg: PUN 1. Also known in format PU.1
+
+#### some JS functions are prefixed with warnings. They are not required to be in here, as they are very simple. They also don't need fID's.
 
 <html>
 <!-- use html to make a table -->
@@ -134,6 +136,38 @@
     <tr>
 <!-- empty line -->
     <tr>
+    <td> 30 </td><td> scrollToBottom(elemId) </td><td> scroll the html element with id elemId as far down as it can go </td><td> </td><td> written </td>
+    <tr>
+<!-- empty line -->
+    <tr>
+    <td> 31 </td><td> isScrolledToBott0m(elemId) </td><td> returns true if elem is scrolled as far down as possible, else false </td><td> </td><td> written </td>
+    <tr>
+<!-- empty line -->
+    <tr>
+    <td> 32 </td><td> autoScroll(isNewMessage, prevScroll, wasScrolledToBottom) </td><td> scrolls the display div to the correct amount up or down depending on whether there is a new message and where the user was scrolled to before </td><td> </td><td> written </td>
+    <tr>
+<!-- empty line -->
+    <tr>
+    <td> 33 </td><td> formatMessageStr(messageStr) </td><td> turns the raw server response into something that can be printed into the display div </td><td> </td><td> written </td>
+    <tr>
+<!-- empty line -->
+    <tr>
+    <td> 34 </td><td> makeNewMessageTone </td><td> make the 'ding' noise when there is a new message. uses the pitch globals set at top </td><td> </td><td> written </td>
+    <tr>
+<!-- empty line -->
+    <tr>
+    <td> 35 </td><td> playNote(pitch, durationInSeconds, waveFormOptional) </td><td> play a pure note with those attributes </td><td> </td><td> written </td>
+    <tr>
+<!-- empty line -->
+    <tr>
+    <td> 36 </td><td> logout() </td><td> clears the sessionStorage username/pw and redirects to login page </td><td> </td><td> written </td>
+    <tr>
+<!-- empty line -->
+    <tr>
+    <td> 37 </td><td> goToLoginPage() </td><td> goes to the login page </td><td> </td><td> written </td>
+    <tr>
+<!-- empty line -->
+    <tr>
     <td> PS 0 </td><td> attemptLogin[username, password] </td><td> check if the password matches the username </td><td> </td><td> written </td>
     <tr>
 <!-- empty line -->
@@ -147,6 +181,10 @@
 <!-- empty line -->
     <tr>
     <td> PS 3 </td><td> getMessages.php[username, password] </td><td> checks password, then if it is correct return the messages </td><td> </td><td> written </td>
+    <tr>
+<!-- empty line -->
+    <tr>
+    <td> PS 4 </td><td> addJoinMessage.php[username] </td><td> adds a simple message when someone joins the chat </td><td> </td><td> written </td>
     <tr>
 <!-- empty line -->
     <tr>

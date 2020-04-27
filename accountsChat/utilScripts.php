@@ -2,6 +2,7 @@
 
 define('userFileName', 'mashedBananaRecipie.txt');
 define('messageFileName', 'messageFile.txt');
+define('userEndSystemName', 'AC-Setup'); // what the system is called in the chat
 
 class User {
     function __construct($username, $passwordHashed) {
