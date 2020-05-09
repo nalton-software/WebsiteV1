@@ -1,14 +1,22 @@
 // requires utilScripts.js, serverCommScripts.js and globalConstants.js
 
+const usernameBarId = 'usernameInput';
+const passwordBarId = 'passwordInput';
+
 function sendLoginRequest() {
     // fID 1
-    //  read input fields
+    // ONLY TO BE USED BY USER BUTTON CLICK
+
+    // read input fields
     var username = readInputBar(usernameBarId);
     var password = readInputBar(passwordBarId);
 
-    //  use php to check if password is correct
+    // use php to check if password is correct
     var data = `username=${username}&password=${password}`;
     sendDataPhpEcho(phpUrls.loginAttempt, data, useLoginRequestResponse);
+    
+    // set login mode for error/warning handling
+    sessionStorage.setItem('ACloginMode', loginModes.userInitiated);
 }
 
 function useLoginRequestResponse(serverResponse) {
@@ -18,17 +26,22 @@ function useLoginRequestResponse(serverResponse) {
     var serverWarningFound = findServerWarning(serverResponse);
 
     // if no errors and no warnings:
-    if (! serverErrorFound && ! serverWarningFound) {
+    if (!serverErrorFound && !serverWarningFound) {
+        // if didn't come here by creating account (as by creating account doesn't need this next step)
+        if (sessionStorage.getItem('ACloginMode') != loginModes.createAccount) {
             // read username and password again
             var username = readInputBar(usernameBarId);
             var password = readInputBar(passwordBarId);
-
-            // put username and password into sessionStorage for later use
+        }
+        
+        // if the user logged in (not the auto login) put username and password into sessionStorage for later use
+        if (sessionStorage.getItem('ACloginMode') == loginModes.userInitiated) {
             sessionStorage.setItem('ACloggedInUsername', username);
             sessionStorage.setItem('ACloggedInPassword', password);
+        }
 
-            // go to chat page
-            goToPage(chatPageUrl);
+        // go to chat page
+        goToPage(chatPageUrl);
     }
     // handle errors and warnings
     if (serverErrorFound) {
@@ -39,8 +52,27 @@ function useLoginRequestResponse(serverResponse) {
     }
 }
 
-// set up enter key to send
-getElemIdById(passwordBarId).addEventListener('keyup', function(event) {
+function autoLogin() {
+    // fID 38
+    // if login data is saved
+    if (sessionStorage.getItem('ACloggedInUsername')) {
+        // read saved data
+        var username = sessionStorage.getItem('ACloggedInUsername');
+        var password = sessionStorage.getItem('ACloggedInPassword');
+
+        //  use php to check if password is correct
+        var data = `username=${username}&password=${password}`;
+        sendDataPhpEcho(phpUrls.loginAttempt, data, useLoginRequestResponse);
+
+        // save login mode
+        sessionStorage.setItem('ACloginMode', loginModes.auto);
+    }
+}
+
+autoLogin();
+
+// set up enter key to login
+getElemById(passwordBarId).addEventListener('keyup', function(event) {
     if (event.keyCode === 13) {
         event.preventDefault();
         sendLoginRequest();

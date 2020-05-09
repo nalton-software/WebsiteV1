@@ -25,10 +25,21 @@
 
             <td class="main" id="mainCell">
             <p class="pageTitle">Accounts Chat Create Account</p>
-            <input id="usernameInput" placeholder="username">
-            <input id="passwordInput" type="password">
-            <button onclick="sendCreateAccountRequest()">Create account</button>
-            </td>
+            <div id="loginArea">
+                <br>
+                <br>
+                <p class="h1">Enter account details:</p>
+                <br>
+                <input id="createAccountUsernameInput" placeholder="username">
+                <br>
+                <input id="createAccountPasswordInput" placeholder="password" type="password">
+                <br>
+                <button onclick="sendCreateAccountRequest()">Create account</button>
+                <br>
+                <br>
+                <br>
+                <br>
+            </div>
         </tr>
         </table>
     </body>
@@ -37,6 +48,6 @@
 <script src="utilScripts.js"></script>
 <script src="serverCommScripts.js"></script>
 <script src="globalConstants.js"></script>
-<script src="createAccountPageScripts.js"></script>
 <script src="loginPageScripts.js"></script>
+<script src="createAccountPageScripts.js"></script>
 </html>

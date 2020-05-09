@@ -24,13 +24,13 @@ var cachedMessages = ''; // use for deciding whether to redraw or not
 
 function scrollToBottom(elemId) {
     // fID 30
-    var elem = getElemIdById(elemId);
+    var elem = getElemById(elemId);
     elem.scrollTop = elem.scrollHeight;
 }
 
 function isScrolledToBottom(elemId) {
     // fID 31
-    var elem = getElemIdById(elemId);
+    var elem = getElemById(elemId);
     if ((elem.scrollHeight - elem.offsetHeight) - elem.scrollTop < 5) { // if within 5px of bottom
         return true;
     }
@@ -56,7 +56,7 @@ function sendMessage() {
     setChatStatusBar(chatStatusBarValues.sending);
     
     // clear input bar
-    getElemIdById(messageInputBarId).value = '';
+    getElemById(messageInputBarId).value = '';
 }
 
 function useSendMessageResponse(serverResponse) {
@@ -83,17 +83,19 @@ function useSendMessageResponse(serverResponse) {
 function setChatStatusBar(text) {
     // fID 23
     //  get the status bar and set its contents
-    getElemIdById(chatStatusBarId).innerText = text;
+    getElemById(chatStatusBarId).innerText = text;
 }
 
 function sendJoinMessage() {
     // fID 24
-    // read username that was saved just before, in login page
+    // read username and password that were saved just before, in login page
     var username = sessionStorage.getItem('ACloggedInUsername');
+    var password = sessionStorage.getItem('ACloggedInPassword');
+
     // if username is saved how it should be
     if (username != null) {
         // send message
-        var data = `username=${username}`;
+        var data = `username=${username}&password=${password}`;
         sendDataPhpEcho(phpUrls.addJoinMessage, data, useJoinMessageReponse);
     }
 }
@@ -138,7 +140,7 @@ function drawMessages(serverResponse) {
     if (! serverErrorFound && ! serverWarningFound) {
 
         // take note of what the scroll was before drawing
-        var prevScroll = getElemIdById(displayDivId).scrollTop;
+        var prevScroll = getElemById(displayDivId).scrollTop;
         var wasScrolledToBottom = isScrolledToBottom(displayDivId);
 
         // if new message(s), continue drawing
@@ -149,7 +151,8 @@ function drawMessages(serverResponse) {
 
             // format messages and put in display div
             var stringToWrite = formatMessages(messageList);
-            getElemIdById(displayDivId).innerText = stringToWrite;
+            getElemById(displayDivId).innerText = stringToWrite;
+            
             // set up cache vars for next download
             isFirstUpdate = false;
             cachedMessages = serverResponse;
@@ -185,7 +188,7 @@ function autoScroll(isNewMessage, prevScroll, wasScrolledToBottom) {
         scrollToBottom(displayDivId);
     }
     else {
-        getElemIdById(displayDivId).scrollTop = prevScroll; // don't change scroll
+        getElemById(displayDivId).scrollTop = prevScroll; // don't change scroll
     }
 }
 
@@ -246,8 +249,14 @@ function logout() {
     goToLoginPage();
 }
 
+function resizeMessageInputBar() {
+    // fID 39
+    var displayDivWidth = getElemById(displayDivId).clientWidth;
+    getElemById(messageInputBarId).style.width = displayDivWidth * 0.8 + 'px';
+}
+
 // set up enter key to send
-getElemIdById(messageInputBarId).addEventListener('keyup', function(event) {
+getElemById(messageInputBarId).addEventListener('keyup', function(event) {
     if (event.keyCode === 13) {
         event.preventDefault();
         sendMessage();
@@ -255,4 +264,5 @@ getElemIdById(messageInputBarId).addEventListener('keyup', function(event) {
 });
 
 setInterval(downloadMessages, downloadInterval);
+resizeMessageInputBar();
 sendJoinMessage();

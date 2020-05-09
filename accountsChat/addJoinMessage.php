@@ -6,6 +6,7 @@ include 'utilScripts.php';
 
 // read username that was sent by the JS
 $username = $_POST['username'];
+$password = $_POST['password'];
 
 $sender = userEndSystemName;
 $content = $username . ' has joined the chat';
@@ -21,7 +22,15 @@ if (strlen($userFileStr) > 0 && strlen($messageFileStr) > 0) {
     $messageList = json_decode($messageFileStr);
     // if decoding ok:
     if ($userList !== null && $messageList !== null) {
-        addMessageAndSave($sender, $content, $messageList);
+        // check if the password is correct
+        $passwordCheckResult = checkPassword($username, $password, $userList);
+        
+        if ($passwordCheckResult === 'success') {
+            addMessageAndSave($sender, $content, $messageList);
+        }
+        else {
+            echo 'WARNINGincorrectPwInChat';
+        }
     }
     else {
         echo 'ERRORfileDecodeError';

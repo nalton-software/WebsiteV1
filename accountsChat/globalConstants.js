@@ -6,16 +6,18 @@ const errorSepInLog = '  -  ';
 
 const userEndSystemName = 'AC-Setup';
 
-// generic id's that must be used
-const usernameBarId = 'usernameInput';
-const passwordBarId = 'passwordInput';
-
 const phpUrls = {
     loginAttempt    : 'loginAttempt.php',
     createAccount   : 'createAccount.php',
     addMessage      : 'addMessage.php',
     addJoinMessage  : 'addJoinMessage.php',
     getMessages     : 'getMessages.php'
+}
+
+const loginModes = {
+    auto          : 'auto',
+    userInitiated : 'userInitiated',
+    createAccount : 'createAccount'
 }
 
 // url is relative to any of the html pages
@@ -33,9 +35,9 @@ const errorDict = {
 
 // full of functions
 const warningDict = {
-    'unknownWarning' : () => alert('Warning: small internal error. We recommend that you close this tab and reopen it'),
-    'WARNINGpwIncorrect' : () => alert('Password incorrect'),
-    'WARNINGnonExistingUsername' : () => alert('Username incorrect'),
-    'WARNINGusernameNotUnique' : () => alert('Username already exists'),
-    'WARNINGincorrectPwInChat' : WARNINGincorrectPwInChat
+    'unknownWarning'             : () => alert('Warning: small internal error. We recommend that you close this tab and reopen it'),
+    'WARNINGpwIncorrect'         : WARNINGincorrectPwLogin,
+    'WARNINGnonExistingUsername' : WARNINGnonExistingUsername,
+    'WARNINGusernameNotUnique'   : () => alert('Username already exists'),
+    'WARNINGincorrectPwInChat'   : WARNINGincorrectPwInChat
 }

@@ -1,9 +1,33 @@
+button {
+    display: inline-block;
+    background-color: #27B133;
+    font-size: 15px;
+    display: inline-block;
+    padding: 5px;
+    border: 1px solid black;
+}
+
 #chatArea {
     overflow-y: scroll;
     height: 60vh;
     width: 60vw;
     border: 1px solid black;
     padding: 10px;
+    margin: 10px;
+    
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 17px;
+}
+
+#chatStatusBar {
+    margin-left: 10px;
+    font-size: 15px;
+}
+
+#messageInputField {
+    padding: 5px;
+    margin-left: 10px;
+    font-size: 15px;
 }
 
 #loginArea {
@@ -17,24 +41,8 @@
     vertical-align: middle;
 }
 
-#loginArea button {
-    background-color: #27B133;
-    font-size: 15px;
-    display: inline-block;
-    padding: 5px;
-    border: 1px solid black;
-}
-
-#usernameInput, #passwordInput {
+#loginArea input {
     margin: 5px;
     min-width: 500px;
     font-size: 20px;
-}
-
-#chatStatusBar {
-    font-size: 15px;
-}
-
-#inputField {
-    width: 250px;
 }

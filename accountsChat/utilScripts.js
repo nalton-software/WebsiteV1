@@ -21,7 +21,7 @@ function getTimeAsString() {
 
     // stringify the array to look nice
     var dateDataString = '';
-    for (var i = 0; i < dateDataArray.length; i ++) {
+    for (var i = 0; i < dateDataArray.length; i++) {
         dateDataString += String(dateDataArray[i]) + ':';
     }
     dateDataString = dateDataString.slice(0, -1);
@@ -34,8 +34,7 @@ function findServerError(serverResponse) {
     var errorHoldingSegment = serverResponse.substring(0, errorPrefix.length);
     if (errorHoldingSegment == errorPrefix) {
         return true
-    }
-    else {
+    } else {
         return false;
     }
     //  get the bit of response that would have error
@@ -49,8 +48,7 @@ function findServerWarning(serverResponse) {
     var warningHoldingSegment = serverResponse.substring(0, warningPrefix.length);
     if (warningHoldingSegment == warningPrefix) {
         return true;
-    }
-    else {
+    } else {
         return false;
     }
 }
@@ -72,7 +70,7 @@ function handleError(fullErrorCode) {
     // log error to log with time
     var currentTime = getTimeAsString();
     var prevErrorLog = localStorage.getItem(localStorageErrorLog);
-    var newErrorLog = prevErrorLog + errorSepInLog + 'error at ' + currentTime + 
+    var newErrorLog = prevErrorLog + errorSepInLog + 'error at ' + currentTime +
         ', type: ' + fullErrorCode + ', message: ' + errorMessage;
     localStorage.setItem(localStorageErrorLog, newErrorLog);
 
@@ -101,7 +99,7 @@ function readInputBar(inputId) {
     return bar.value;
 }
 
-function getElemIdById(id) {
+function getElemById(id) {
     // fID 29
     return document.getElementById(id);
 }
@@ -113,10 +111,47 @@ function goToCreateAccountPage() {
 
 function goToLoginPage() {
     // fID 37
+    
+    // clear saved username and password to avoid the auto-loginner from trying to log in
+    sessionStorage.setItem('ACloggedInUsername', '');
+    sessionStorage.setItem('ACloggedInPassword', '');
     goToPage(loginPageUrl);
 }
 
 function WARNINGincorrectPwInChat() {
     alert('Login required: press ok to go to login page');
+
+    // clear saved username and password to avoid the auto-loginner from trying to log in
+    sessionStorage.setItem('ACloggedInUsername', '');
+    sessionStorage.setItem('ACloggedInPassword', '');
+
     goToLoginPage();
+}
+
+function WARNINGnonExistingUsername() {
+    var loginMode = sessionStorage.getItem('ACloginMode');
+    switch (loginMode) {
+        case loginModes.auto:
+            alert('Automatic log in failed. Please log in manually');
+            break;
+        case loginModes.userInitiated:
+            alert('Wrong username');
+            break;
+        default:
+            alert('Wrong username');
+    }
+}
+
+function WARNINGincorrectPwLogin() {
+    var loginMode = sessionStorage.getItem('ACloginMode');
+    switch (loginMode) {
+        case loginModes.auto:
+            alert('Automatic log in failed. Please log in manually');
+            break;
+        case loginModes.userInitiated:
+            alert('Wrong password');
+            break;
+        default:
+            alert('Wrong password');
+    }
 }

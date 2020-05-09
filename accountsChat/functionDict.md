@@ -168,6 +168,14 @@
     <tr>
 <!-- empty line -->
     <tr>
+    <td> 38 </td><td> autoLogin() </td><td> tries to automatically log in if the account details are saved </td><td> </td><td> written </td>
+    <tr>
+<!-- empty line -->
+    <tr>
+    <td> 39 </td><td> resizeMessageInputBar() </td><td> makes the message input bar on the chat page a pleasing size </td><td> </td><td> written </td>
+    <tr>
+<!-- empty line -->
+    <tr>
     <td> PS 0 </td><td> attemptLogin[username, password] </td><td> check if the password matches the username </td><td> </td><td> written </td>
     <tr>
 <!-- empty line -->
@@ -184,7 +192,7 @@
     <tr>
 <!-- empty line -->
     <tr>
-    <td> PS 4 </td><td> addJoinMessage.php[username] </td><td> adds a simple message when someone joins the chat </td><td> </td><td> written </td>
+    <td> PS 4 </td><td> addJoinMessage.php[username, password] </td><td> adds a simple message when someone joins the chat but only if that user is verified. </td><td> </td><td> written </td>
     <tr>
 <!-- empty line -->
     <tr>
