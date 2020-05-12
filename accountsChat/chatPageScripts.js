@@ -1,12 +1,16 @@
 // requires utilScripts.js, serverCommScripts.js and globalConstants.js
-const chatStatusBarId = 'chatStatusBar';
-const messageInputBarId = 'messageInputField';
-const displayDivId = 'chatArea';
+const chatStatusBarId       = 'chatStatusBar';
+const messageInputBarId     = 'messageInputField';
+const innermostChatDivId    = 'content';
+const chatAreaId            = 'chatArea';
+const chatAreaHolderId      = 'chatAreaHolder';
+const toggleAllMsgBtnId     = 'toggleAllMsgBtn';
 
-const downloadInterval = 1000;
-var cachedMessages = '';
-var isFirstUpdate = true;
-var prevScroll = 0;
+const downloadInterval  = 1000;
+var cachedMessages      = '';
+var isFirstUpdate       = true;
+var showingAllMessages  = false;
+var prevScroll          = 0;
 
 // for 'beep' on new message
 const newMessageNoise1 = {pitch: 610, durationInSeconds: 0.17, waveForm: 'square'};
@@ -18,7 +22,7 @@ const chatStatusBarValues = {
     messageSent : 'message sent'
 }
 
-const messageDrawLimit = 50; // arbitrary number to stop too many things being drawn
+const msgDrawLimit = 50; // arbitrary number to stop too many things being drawn
 
 var cachedMessages = ''; // use for deciding whether to redraw or not
 
@@ -83,7 +87,9 @@ function useSendMessageResponse(serverResponse) {
 function setChatStatusBar(text) {
     // fID 23
     //  get the status bar and set its contents
+
     getElemById(chatStatusBarId).innerText = text;
+    getElemById(chatStatusBarId).style.visibility = 'visible'; // make it visible as it starts hidden
 }
 
 function sendJoinMessage() {
@@ -124,9 +130,16 @@ function downloadMessages() {
     var username = sessionStorage.getItem('ACloggedInUsername');
     var password = sessionStorage.getItem('ACloggedInPassword');
 
-    // send a request to server to get messages
-    var data = `username=${username}&password=${password}`;
-    sendDataPhpEcho(phpUrls.getMessages, data, drawMessages);
+    if (showingAllMessages) {
+        // send a request to server to get messages
+        var data = `username=${username}&password=${password}`;
+        sendDataPhpEcho(phpUrls.getAllMessages, data, drawMessages);
+    }
+    else {
+        // send a request to server to get messages
+        var data = `username=${username}&password=${password}&msgAmount=${msgDrawLimit}`;
+        sendDataPhpEcho(phpUrls.getMessages, data, drawMessages);
+    }
 }
 
 function drawMessages(serverResponse) {
@@ -140,8 +153,8 @@ function drawMessages(serverResponse) {
     if (! serverErrorFound && ! serverWarningFound) {
 
         // take note of what the scroll was before drawing
-        var prevScroll = getElemById(displayDivId).scrollTop;
-        var wasScrolledToBottom = isScrolledToBottom(displayDivId);
+        var prevScroll = getElemById(chatAreaId).scrollTop;
+        var wasScrolledToBottom = isScrolledToBottom(chatAreaId);
 
         // if new message(s), continue drawing
         var isNewMessage = serverResponse !== cachedMessages
@@ -151,7 +164,7 @@ function drawMessages(serverResponse) {
 
             // format messages and put in display div
             var stringToWrite = formatMessages(messageList);
-            getElemById(displayDivId).innerText = stringToWrite;
+            getElemById(innermostChatDivId).innerText = stringToWrite;
             
             // set up cache vars for next download
             isFirstUpdate = false;
@@ -182,24 +195,18 @@ function drawMessages(serverResponse) {
 function autoScroll(isNewMessage, prevScroll, wasScrolledToBottom) {
     // fID 32
     if (isFirstUpdate) {
-        scrollToBottom(displayDivId);
+        scrollToBottom(chatAreaId);
     }
     else if (wasScrolledToBottom && isNewMessage) {
-        scrollToBottom(displayDivId);
+        scrollToBottom(chatAreaId);
     }
     else {
-        getElemById(displayDivId).scrollTop = prevScroll; // don't change scroll
+        getElemById(chatAreaId).scrollTop = prevScroll; // don't change scroll
     }
 }
 
 function formatMessages(messageList) {
     // fID 33
-
-    // if the list is too long, clip it
-    if (messageList.length > messageDrawLimit) {
-        var lengthToChop = messageList.length - messageDrawLimit;
-        messageList = messageList.slice(lengthToChop);
-    }
 
     // create empty string to put all messages into
     var stringToWrite = '';
@@ -210,7 +217,6 @@ function formatMessages(messageList) {
         var currLine = currMessage.sender + ' : ' + currMessage.content + '\n';
         stringToWrite += currLine;
     }
-    stringToWrite += '\n';
 
     return stringToWrite;
 }
@@ -251,8 +257,17 @@ function logout() {
 
 function resizeMessageInputBar() {
     // fID 39
-    var displayDivWidth = getElemById(displayDivId).clientWidth;
+    var displayDivWidth = getElemById(chatAreaId).clientWidth;
     getElemById(messageInputBarId).style.width = displayDivWidth * 0.8 + 'px';
+}
+
+function toggleShowAllMessages() {
+    // fID 40
+    showingAllMessages = ! showingAllMessages;
+    var button = getElemById(toggleAllMsgBtnId);
+    if (! showingAllMessages) {
+        button.innerText = 'Show full chat history'
+    }
 }
 
 // set up enter key to send

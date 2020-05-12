@@ -28,8 +28,13 @@
         <br>
         
 
-        <div id="chatArea" style="overflow-y:scroll; height:50vh;"></div>
-        <p id="chatStatusBar"></p>
+        <div id="chatAreaHolder">
+            <div id="chatArea" style="overflow-y:scroll; height:50vh;">
+                <button onclick="toggleShowAllMessages()" id="toggleAllMsgButton">Show full chat history</button>
+                <div id="content"></div>
+            </div>
+            <p id="chatStatusBar">invisible</p>
+        </div>
         <input id="messageInputField">
         <button onclick="sendMessage()">Write!</button>
         <button onclick="logout()">Log out</button>

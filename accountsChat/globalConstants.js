@@ -11,7 +11,8 @@ const phpUrls = {
     createAccount   : 'createAccount.php',
     addMessage      : 'addMessage.php',
     addJoinMessage  : 'addJoinMessage.php',
-    getMessages     : 'getMessages.php'
+    getMessages     : 'getMessages.php',
+    getAllMessages  : 'getAllMessages.php'
 }
 
 const loginModes = {

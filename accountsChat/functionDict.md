@@ -120,7 +120,7 @@
     <tr>
 <!-- empty line -->
     <tr>
-    <td> 26 </td><td> downloadMessages() </td><td> run fID 27 and send the response to fID 28 </td><td> </td><td> written </td>
+    <td> 26 </td><td> downloadMessages() </td><td> if showing all messages, then call PS 5, else call PS 2. In both cases set response handler to drawMessages </td><td> </td><td> written </td>
     <tr>
 <!-- empty line -->
     <tr>
@@ -176,6 +176,10 @@
     <tr>
 <!-- empty line -->
     <tr>
+    <td> 40 </td><td> toggleShowAllMessages() </td><td> toggle whether to show all messages in the chat </td><td> </td><td> PDL started </td>
+    <tr>
+<!-- empty line -->
+    <tr>
     <td> PS 0 </td><td> attemptLogin[username, password] </td><td> check if the password matches the username </td><td> </td><td> written </td>
     <tr>
 <!-- empty line -->
@@ -188,11 +192,15 @@
     <tr>
 <!-- empty line -->
     <tr>
-    <td> PS 3 </td><td> getMessages.php[username, password] </td><td> checks password, then if it is correct return the messages </td><td> </td><td> written </td>
+    <td> PS 3 </td><td> getMessages.php[username, password, msgNum] </td><td> checks password, then if it is correct returns up msgNum messages from the list </td><td> </td><td> written </td>
     <tr>
 <!-- empty line -->
     <tr>
     <td> PS 4 </td><td> addJoinMessage.php[username, password] </td><td> adds a simple message when someone joins the chat but only if that user is verified. </td><td> </td><td> written </td>
+    <tr>
+<!-- empty line -->
+    <tr>
+    <td> PS 5 </td><td> getAllMessages.php[username, password] </td><td> checks password, then if it is correct returns all messages in the list (not like getMessages.php) </td><td> </td><td> written </td>
     <tr>
 <!-- empty line -->
     <tr>

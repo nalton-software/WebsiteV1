@@ -1,5 +1,5 @@
 <?php
-// PS 2
+// PS 5
 
 // use the utility scripts
 include 'utilScripts.php';
@@ -7,7 +7,6 @@ include 'utilScripts.php';
 // read username and password that were sent by the JS
 $username = $_POST['username'];
 $password = $_POST['password'];
-$msgAmount = $_POST['msgAmount'];
 
 // read user and message files
 $userFileStr = file_get_contents(userFileName);
@@ -25,12 +24,7 @@ if (strlen($userFileStr) > 0 && strlen($messageFileStr) > 0) {
         
         if ($passwordCheckResult === 'success') {
             $cutMsgList = $msgList;
-            // if the message list is too long, trim it
-            if (count($cutMsgList) > $msgAmount) {
-                $lengthToChop = count($msgList) - $msgAmount;
-                $cutMsgList = array_slice($msgList, $lengthToChop);
-            }
-            echo json_encode($cutMsgList);
+            echo json_encode($msgList);
         }
         else {
             echo 'WARNINGincorrectPwInChat';
