@@ -34,6 +34,10 @@ h1 {
   text-align: center;
 }
 
+.pageTitle img {
+  margin-bottom: -20px;
+}
+
 .topbar {
   padding: 10px;
   display: block;
