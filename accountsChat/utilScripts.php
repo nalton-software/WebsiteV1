@@ -1,7 +1,7 @@
 <?php
 
-define('userFileName', 'mashedBananaRecipie.txt');
-define('messageFileName', 'messageFile.txt');
+define('userFileName', '/var/wpd/accountsChat/userFile.txt');
+define('messageFileName', '/var/wpd/accountsChat/messageFile.txt');
 define('userEndSystemName', 'AC-Setup'); // what the system is called in the chat
 
 class User {
