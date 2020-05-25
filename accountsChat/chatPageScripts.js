@@ -250,7 +250,7 @@ function playNote(pitch, durationInSeconds, waveFormOptional) {
 function logout() {
     // fID 36
     // clear sessionStorage and go to login page
-    sessionStorage.ACloggedInUsername = '';  
+    sessionStorage.ACloggedInUsername = '';
     sessionStorage.ACloggedInPassword = '';
     goToLoginPage();
 }
@@ -281,3 +281,7 @@ getElemById(messageInputBarId).addEventListener('keyup', function(event) {
 setInterval(downloadMessages, downloadInterval);
 resizeMessageInputBar();
 sendJoinMessage();
+
+// add a tag thing to session storage so if the person presses back (as in the browser back button),
+// then the auto-login won't try to log in
+sessionStorage.setItem('ACchatPageFlag', true);

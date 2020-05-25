@@ -54,22 +54,31 @@ function useLoginRequestResponse(serverResponse) {
 
 function autoLogin() {
     // fID 38
-    // if login data is saved
-    if (sessionStorage.getItem('ACloggedInUsername')) {
-        // read saved data
-        var username = sessionStorage.getItem('ACloggedInUsername');
-        var password = sessionStorage.getItem('ACloggedInPassword');
 
-        //  use php to check if password is correct
-        var data = `username=${username}&password=${password}`;
-        sendDataPhpEcho(phpUrls.loginAttempt, data, useLoginRequestResponse);
+    // if (first line) there is no chat page flag - so the user didn't just click back from the chat page
+    // if the user came from the chat page, that flag would be set to true
+    if (sessionStorage.getItem('ACchatPageFlag') === null) {
+        // if login data is saved
+        if (sessionStorage.getItem('ACloggedInUsername')) {
+            // read saved data
+            var username = sessionStorage.getItem('ACloggedInUsername');
+            var password = sessionStorage.getItem('ACloggedInPassword');
 
-        // save login mode
-        sessionStorage.setItem('ACloginMode', loginModes.auto);
+            //  use php to check if password is correct
+            var data = `username=${username}&password=${password}`;
+            sendDataPhpEcho(phpUrls.loginAttempt, data, useLoginRequestResponse);
+
+            // save login mode
+            sessionStorage.setItem('ACloginMode', loginModes.auto);
+        }
     }
 }
 
 autoLogin();
+
+// tell future pages that the last page WASN'T the chat page
+// not that this comes after autoLogin()
+sessionStorage.removeItem('ACchatPageFlag');
 
 // set up enter key to login
 getElemById(passwordBarId).addEventListener('keyup', function(event) {
