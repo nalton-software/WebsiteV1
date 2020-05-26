@@ -77,7 +77,7 @@ function autoLogin() {
 autoLogin();
 
 // tell future pages that the last page WASN'T the chat page
-// not that this comes after autoLogin()
+// note that this comes after autoLogin()
 sessionStorage.removeItem('ACchatPageFlag');
 
 // set up enter key to login
