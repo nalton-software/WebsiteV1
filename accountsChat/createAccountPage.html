@@ -18,28 +18,31 @@
         <table class="mainLayoutTable" id="mainLayoutTable">
         <tr>
             <td class="sidebarHolder" id="sidebarHolder">
-            <div class="sidebar" id="sidebar">
+            <div class="sidebar" id="sidebar"></div>
+            </td>
+
+            <td class="mainHolder" id="mainCell">
+            <div class="main" id="mainCellInternals">
+
+                <p class="pageTitle">Accounts Chat Create Account</p>
+                <div id="loginArea">
+                    <br>
+                    <br>
+                    <p class="h1">Enter account details:</p>
+                    <br>
+                    <input id="createAccountUsernameInput" placeholder="username">
+                    <br>
+                    <input id="createAccountPasswordInput" placeholder="password" type="password">
+                    <br>
+                    <button onclick="sendCreateAccountRequest()">Create account</button>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                </div>
 
             </div>
             </td>
-
-            <td class="main" id="mainCell">
-            <p class="pageTitle">Accounts Chat Create Account</p>
-            <div id="loginArea">
-                <br>
-                <br>
-                <p class="h1">Enter account details:</p>
-                <br>
-                <input id="createAccountUsernameInput" placeholder="username">
-                <br>
-                <input id="createAccountPasswordInput" placeholder="password" type="password">
-                <br>
-                <button onclick="sendCreateAccountRequest()">Create account</button>
-                <br>
-                <br>
-                <br>
-                <br>
-            </div>
         </tr>
         </table>
     </body>

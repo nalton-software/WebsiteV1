@@ -18,26 +18,26 @@
     <table class="mainLayoutTable" id="mainLayoutTable">
     <tr>
         <td class="sidebarHolder" id="sidebarHolder">
-        <div class="sidebar" id="sidebar">
-
-        </div>
+        <div class="sidebar" id="sidebar"></div>
         </td>
 
-        <td class="main" id="mainCell">
-        <p class="pageTitle">Accounts Chat</p>
-        <br>
-        
+        <td class="mainHolder" id="mainCell">
+        <div class="main" id="mainCellInternals">
 
-        <div id="chatAreaHolder">
-            <div id="chatArea" style="overflow-y:scroll; height:50vh;">
-                <button onclick="toggleShowAllMessages()" id="toggleAllMsgButton">Show full chat history</button>
-                <div id="content"></div>
+            <p class="pageTitle">Accounts Chat</p>
+            <br>
+            
+            <div id="chatAreaHolder">
+                <div id="chatArea" style="overflow-y:scroll; height:50vh;">
+                    <button onclick="toggleShowAllMessages()" id="toggleAllMsgButton">Show full chat history</button>
+                    <div id="content"></div>
+                </div>
+                <p id="chatStatusBar">invisible</p>
             </div>
-            <p id="chatStatusBar">invisible</p>
+            <input id="messageInputField">
+            <button onclick="sendMessage()">Write!</button>
+            <button onclick="logout()">Log out</button>
         </div>
-        <input id="messageInputField">
-        <button onclick="sendMessage()">Write!</button>
-        <button onclick="logout()">Log out</button>
         </td>
     </tr>
     </table>

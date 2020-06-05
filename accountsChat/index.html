@@ -10,39 +10,40 @@
     </head>
 
     <body>
-    <div class="topbar" id="topbar">
+        <div class="topbar" id="topbar">
         <h1>Nalton Software</h1>
         <button onclick="toggleSidebar()" id="sidebarButton">Hide all pages</button>
-    </div>
-
-    <table class="mainLayoutTable" id="mainLayoutTable">
+        </div>
+    
+        <table class="mainLayoutTable" id="mainLayoutTable">
         <tr>
-        <td class="sidebarHolder" id="sidebarHolder">
-            <div class="sidebar" id="sidebar">
+            <td class="sidebarHolder" id="sidebarHolder">
+            <div class="sidebar" id="sidebar"></div>
+            </td>
+    
+            <td class="mainHolder" id="mainCell">
+            <div class="main" id="mainCellInternals">
 
-            </div>
-        </td>
+                <p class="pageTitle">Accounts Chat Login</p>
+                <div id="loginArea">
+                    <br>
+                    <br>
+                    <p class="h1">Enter account details:</p>
+                    <br>
+                    <input id="usernameInput" placeholder="username">
+                    <br>
+                    <input id="passwordInput" placeholder="password" type="password">
+                    <br>
+                    <button onclick="sendLoginRequest()">Login</button>
+                    <button onclick="goToCreateAccountPage()">Create new account</button>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                </div>
+                </div>
+            </td>
 
-        <td class="main" id="mainCell">
-            <p class="pageTitle">Accounts Chat Login</p>
-            <div id="loginArea">
-                <br>
-                <br>
-                <p class="h1">Enter account details:</p>
-                <br>
-                <input id="usernameInput" placeholder="username">
-                <br>
-                <input id="passwordInput" placeholder="password" type="password">
-                <br>
-                <button onclick="sendLoginRequest()">Login</button>
-                <button onclick="goToCreateAccountPage()">Create new account</button>
-                <br>
-                <br>
-                <br>
-                <br>
-            </div>
-        </td>
-        
         </tr>
     </table>
     </body>
