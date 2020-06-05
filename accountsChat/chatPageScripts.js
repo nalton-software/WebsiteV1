@@ -157,10 +157,21 @@ function drawMessages(serverResponse) {
         var wasScrolledToBottom = isScrolledToBottom(chatAreaId);
 
         // if new message(s), continue drawing
-        var isNewMessage = serverResponse !== cachedMessages
+        var isNewMessage = serverResponse !== cachedMessages;
         if (isNewMessage) {
             // parse response
             var messageList = JSON.parse(serverResponse);
+
+            // debug
+            if (chatbotEnabled) {
+                var lastMessage = messageList[messageList.length - 1];
+                if (lastMessage.sender !== sessionStorage.ACloggedInUsername &&
+                    lastMessage.sender !== 'AC-Setup' && lastMessage.content !== null) {
+                    var reply = chatbot.processSentence(lastMessage.content);
+                    getElemById(messageInputBarId).value = reply;
+                    sendMessage();
+                }
+            }
 
             // format messages and put in display div
             var stringToWrite = formatMessages(messageList);
@@ -278,6 +289,9 @@ getElemById(messageInputBarId).addEventListener('keyup', function(event) {
     }
 });
 
+// debug
+var chatbot = new Chatbot();
+chatbotEnabled = false;
 setInterval(downloadMessages, downloadInterval);
 resizeMessageInputBar();
 sendJoinMessage();

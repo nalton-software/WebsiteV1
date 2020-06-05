@@ -2,5 +2,6 @@ Homepage&/homepage*
 Sandy Editor&/sandyEditor*
 Minesweeper&/minesweeper*
 Chat Box&/chatbox*
+test&/fetchAsync*
 Accounts Chat&/accountsChat*
 P5 Whiteboard&/p5Whiteboard
