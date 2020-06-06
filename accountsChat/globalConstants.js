@@ -6,6 +6,8 @@ const errorSepInLog = '  -  ';
 
 const userEndSystemName = 'AC-Setup';
 
+const notificationToneUrl = 'assets/notification.mp3';
+
 const phpUrls = {
     loginAttempt    : 'loginAttempt.php',
     createAccount   : 'createAccount.php',

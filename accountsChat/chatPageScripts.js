@@ -12,11 +12,6 @@ var isFirstUpdate       = true;
 var showingAllMessages  = false;
 var prevScroll          = 0;
 
-// for 'beep' on new message
-const newMessageNoise1 = {pitch: 610, durationInSeconds: 0.17, waveForm: 'square'};
-const newMessageNoise2 = {pitch: 590, durationInSeconds: 0.23, waveForm: 'square'};
-var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
 const chatStatusBarValues = {
     sending : 'sending',
     messageSent : 'message sent'
@@ -182,8 +177,11 @@ function drawMessages(serverResponse) {
             cachedMessages = serverResponse;
 
             // if the last message was not sent by the logged in user, make a tone
+            // (don't make it on the first update as autoplay is blocked without a user gesture first,
+            // and the first update will be the join message)
             var lastMessage = messageList[messageList.length - 1];
-            if (lastMessage.sender != sessionStorage.ACloggedInUsername) {
+            if (lastMessage.sender != sessionStorage.ACloggedInUsername &&
+                ! isFirstUpdate) {
                 makeNewMessageTone();
             }
         } // end if (new message)
@@ -234,28 +232,8 @@ function formatMessages(messageList) {
 
 function makeNewMessageTone() {
     // fID 34
-    playNote(newMessageNoise1.pitch, newMessageNoise1.durationInSeconds, newMessageNoise1.waveForm);
-    setTimeout(function() {
-        playNote(newMessageNoise2.pitch, newMessageNoise2.durationInSeconds, newMessageNoise2.waveForm);
-    }, newMessageNoise1.durationInSeconds * 1000);
-}
-
-function playNote(pitch, durationInSeconds, waveFormOptional) {
-    // fID 35
-    if (waveFormOptional == undefined) {
-        waveForm = 'sine'
-    }
-    else {
-        waveForm = waveFormOptional;
-    }
-    // create Oscillator node
-    var oscillator = audioCtx.createOscillator();
-
-    oscillator.type = waveForm;
-    oscillator.frequency.value = pitch; // value in hertz
-    oscillator.connect(audioCtx.destination);
-    oscillator.start(0);
-    oscillator.stop(audioCtx.currentTime + durationInSeconds);
+    var a = new Audio(notificationToneUrl);
+    a.play();
 }
 
 function logout() {

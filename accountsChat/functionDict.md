@@ -156,7 +156,7 @@
     <tr>
 <!-- empty line -->
     <tr>
-    <td> 35 </td><td> playNote(pitch, durationInSeconds, waveFormOptional) </td><td> play a pure note with those attributes </td><td> </td><td> written </td>
+    <td> 35 </td><td> omitted </td><td> this fID has not been used, most likely as there was a function with this fID that got removed</td> <td></td> <td></td>
     <tr>
 <!-- empty line -->
     <tr>

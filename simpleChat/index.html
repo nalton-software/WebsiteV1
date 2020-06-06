@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width" />
-        <title>Nalton Software</title>
+        <title>Simple Chat</title>
         <link href="/normalStyle.css" rel="stylesheet" type="text/css" />
         <link href="/favicon.png" rel="icon" />
     </head>
@@ -24,15 +24,21 @@
             <td class="mainHolder" id="mainCell">
             <div class="main" id="mainCellInternals">
 
-                <p class="pageTitle">FetchAsync</p>
-                <h1>This is just a test to learn these things
-                </h1>
-                
-                <div id="outputDiv"></div>
-
-                <input id="msgInput"> <button onclick="sendMsg()">Send</button>
+                <p class="pageTitle">Simple Chat</p>
                 <br>
-                <input id="usernameInput">
+                <p>This was originally just a test to learn fetch but I was bored so you have this now</p>
+                <br>
+
+                <div id="outputDiv" style="width: 80%; border: 1px solid black;
+                height: 40vh; overflow-y: scroll; font-size: 15px; padding: 10px;
+                font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"></div>
+
+                <br>
+                <input id="msgInput" placeholder="write message" autocomplete="off" 
+                style="width: 50vw; font-size: 15px;"> <button onclick="sendMsg()">Send</button>
+                <br>
+                <br>
+                <input id="usernameInput" style="font-size: 15px;" placeholder="username">
 
             </div>
             </td>
