@@ -157,17 +157,6 @@ function drawMessages(serverResponse) {
             // parse response
             var messageList = JSON.parse(serverResponse);
 
-            // debug
-            if (chatbotEnabled) {
-                var lastMessage = messageList[messageList.length - 1];
-                if (lastMessage.sender !== sessionStorage.ACloggedInUsername &&
-                    lastMessage.sender !== 'AC-Setup' && lastMessage.content !== null) {
-                    var reply = chatbot.processSentence(lastMessage.content);
-                    getElemById(messageInputBarId).value = reply;
-                    sendMessage();
-                }
-            }
-
             // format messages and put in display div
             var stringToWrite = formatMessages(messageList);
             getElemById(innermostChatDivId).innerText = stringToWrite;
@@ -179,11 +168,14 @@ function drawMessages(serverResponse) {
             // if the last message was not sent by the logged in user, make a tone
             // (don't make it on the first update as autoplay is blocked without a user gesture first,
             // and the first update will be the join message)
-            var lastMessage = messageList[messageList.length - 1];
-            if (lastMessage.sender != sessionStorage.ACloggedInUsername &&
-                ! isFirstUpdate) {
-                makeNewMessageTone();
+            if (messageList.length >= 2) {
+                var lastMessage = messageList[messageList.length - 1];
+                if (lastMessage.sender != sessionStorage.ACloggedInUsername &&
+                    ! isFirstUpdate) {
+                    makeNewMessageTone();
+                }
             }
+            else makeNewMessageTone();
         } // end if (new message)
         // else do nothing - keep already-drawn messages
 
@@ -266,13 +258,6 @@ getElemById(messageInputBarId).addEventListener('keyup', function(event) {
         sendMessage();
     }
 });
-
-// debug
-var chatbot = new Chatbot();
-chatbotEnabled = false;
-setInterval(downloadMessages, downloadInterval);
-resizeMessageInputBar();
-sendJoinMessage();
 
 // add a tag thing to session storage so if the person presses back (as in the browser back button),
 // then the auto-login won't try to log in
