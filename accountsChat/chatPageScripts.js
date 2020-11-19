@@ -259,6 +259,8 @@ getElemById(messageInputBarId).addEventListener('keyup', function(event) {
     }
 });
 
+setInterval(downloadMessages, downloadInterval);
+
 // add a tag thing to session storage so if the person presses back (as in the browser back button),
 // then the auto-login won't try to log in
 sessionStorage.setItem('ACchatPageFlag', true);
