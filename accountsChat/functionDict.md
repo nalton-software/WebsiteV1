@@ -152,7 +152,7 @@
     <tr>
 <!-- empty line -->
     <tr>
-    <td> 34 </td><td> makeNewMessageTone </td><td> make the 'ding' noise when there is a new message. uses the pitch globals set at top </td><td> </td><td> written </td>
+    <td> 34 </td><td> makeNewMessageTone() </td><td> make the 'ding' noise when there is a new message. uses the pitch globals set at top </td><td> </td><td> written </td>
     <tr>
 <!-- empty line -->
     <tr>
@@ -177,6 +177,14 @@
 <!-- empty line -->
     <tr>
     <td> 40 </td><td> toggleShowAllMessages() </td><td> toggle whether to show all messages in the chat </td><td> </td><td> PDL started </td>
+    <tr>
+<!-- empty line -->
+    <tr>
+    <td> 40 </td><td> safenHtmlTags(str) </td><td> break html tags in the string by inserting u200c in the start of tags. Allows for setting of innerHTML of msg draw thing. </td><td> </td><td> written </td>
+    <tr>
+<!-- empty line -->
+    <tr>
+    <td> 41 </td><td> replaceAll(str, search, replace) </td><td> Replace all occurences of `search` with `replace` </td><td> </td><td> written </td>
     <tr>
 <!-- empty line -->
     <tr>

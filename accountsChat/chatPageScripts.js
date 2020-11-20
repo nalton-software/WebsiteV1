@@ -159,7 +159,7 @@ function drawMessages(serverResponse) {
 
             // format messages and put in display div
             var stringToWrite = formatMessages(messageList);
-            getElemById(innermostChatDivId).innerText = stringToWrite;
+            getElemById(innermostChatDivId).innerHTML = stringToWrite;
             
             // set up cache vars for next download
             isFirstUpdate = false;
@@ -206,6 +206,17 @@ function autoScroll(isNewMessage, prevScroll, wasScrolledToBottom) {
     }
 }
 
+function safenHtmlTags(str) {
+    // fID 40
+
+    // make it so that the HTML tags in a string won't be elements
+    // if they are inserted into an element by innerHTML
+    // this works by inserting an invisible character between the < at the start of the tag
+    // this won't affect a < that is just in text normally
+    str = replaceAll(str, '<', '<\u200C');
+    return str
+}
+
 function formatMessages(messageList) {
     // fID 33
 
@@ -215,7 +226,11 @@ function formatMessages(messageList) {
     // format each message and put together:
     for (var msgIdx = 0; msgIdx < messageList.length; msgIdx ++) {
         var currMessage = messageList[msgIdx];
-        var currLine = currMessage.sender + ' : ' + currMessage.content + '\n';
+        var safeSender = safenHtmlTags(currMessage.sender);
+        var safeContent = safenHtmlTags(currMessage.content);
+        var currLine = `<span class="messageSender">${safeSender}</span><br>` + 
+            `<span class="messageContent">${safeContent}</span><br><br>`;
+        console.log(currLine);
         stringToWrite += currLine;
     }
 

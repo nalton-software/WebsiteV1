@@ -42,5 +42,6 @@ const warningDict = {
     'WARNINGpwIncorrect'         : WARNINGincorrectPwLogin,
     'WARNINGnonExistingUsername' : WARNINGnonExistingUsername,
     'WARNINGusernameNotUnique'   : () => alert('Username already exists'),
+    'WARNINGusernameBanned'      : () => alert('Username invalid'),
     'WARNINGincorrectPwInChat'   : WARNINGincorrectPwInChat
 }

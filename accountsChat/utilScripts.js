@@ -5,6 +5,11 @@ function goToPage(url) {
     window.location.href = url;
 }
 
+function replaceAll(string, search, replace) {
+    // fID 41
+    return string.split(search).join(replace);
+}
+
 function getTimeAsString() {
     // fID 17
     // set up date obj

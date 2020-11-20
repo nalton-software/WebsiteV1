@@ -19,9 +19,12 @@ if (strlen($userFileStr) > 0) {
     if ($userList !== null) {
         // see if any users exist with that username already
         $possibleUsernameDuplicate = findUserObj($username, $userList);
+
+        $usernameBanned = in_array($username, $bannedUsernames);
         
-        // if not found user:
-        if ($possibleUsernameDuplicate === null) {
+        // if the username is ok:
+        if ($possibleUsernameDuplicate === null &&
+            ! $usernameBanned) {
             // hash password
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
             $newUserObj = new User($username, $hashedPassword);
@@ -38,6 +41,10 @@ if (strlen($userFileStr) > 0) {
                 echo 'ERRORfileWriteError';
             }
             echo json_encode($userList);
+        }
+        // Say that the username is not allowed
+        elseif ($usernameBanned) {
+            echo 'WARNINGusernameBanned';
         }
         // else echo that username is already in use
         else {
