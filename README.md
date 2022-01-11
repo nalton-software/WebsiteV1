@@ -1,5 +1,7 @@
 # Nalton Software Website Readme
 
+NOTE: Website has been moved to https://github.com/nalton-software/website.
+
 ## Changelog:
 #### these versions are all 0.?.? because they are all pre-release
 
